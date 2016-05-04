@@ -52,7 +52,14 @@
             @Html.DisplayFor(modelItem => item.DateAdded)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.AverageRating)
+           @if (item.AverageRating == null)
+                {
+                <p>No rating</p>
+            }
+            else
+            {
+                @Html.DisplayFor(model => item.AverageRating)
+            }
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.FoodID }) |
