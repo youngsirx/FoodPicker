@@ -11,6 +11,7 @@ namespace FoodPicker.Models
     {
         public int FoodID { get; set; }//PK
         [Required]
+        [Display(Name = "Food")]
         [StringLength(50, MinimumLength = 3)]
         public string Name { get; set; }
 

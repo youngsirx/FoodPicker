@@ -8,49 +8,53 @@
 
 </div>
 
-<div class="col-sm-3 col-md-3 pull-right">
-    <form class="navbar-form" role="search">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search" name="q">
-            <div class="input-group-btn">
-                <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+@* search bar *@
+<div class="row">
+
+    <div class="col-md-offset-3 col-md-6 custom-search-form">
+        <form class="navbar-form" role="search">
+            <div class="form-group">
+                <input type="text" class="form-control custom-input-search" placeholder="Search">
+            </div>
+            <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
+        </form>
+        </div>
+    </div>
+@* end of search bar *@
+
+        @* jyoung: map of moncton *@
+        <div class="row">
+            <div class="col-md-12 ">
+
+                <script src="http://maps.googleapis.com/maps/api/js"></script>
+                <script>
+                    function initialize() {
+                        var mapProp = {
+                            center: new google.maps.LatLng(46.0878, -64.7782),
+                            zoom: 12,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        };
+                        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+                    }
+                    google.maps.event.addDomListener(window, 'load', initialize);
+                </script>
+                <div id="googleMap" style="width:1170px;height:380px;" class="center-block"></div>
             </div>
         </div>
-    </form>
-</div>
-@* jyoung: map of moncton *@
-<div class="row">
-    <div class="col-md-12">
-
-        <script src="http://maps.googleapis.com/maps/api/js"></script>
-        <script>
-            function initialize() {
-                var mapProp = {
-                    center: new google.maps.LatLng(46.0878, -64.7782),
-                    zoom: 12,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-            }
-            google.maps.event.addDomListener(window, 'load', initialize);
-        </script>
-        <div id="googleMap" style="width:1000px;height:380px;" class="center-block"></div>
-    </div>
-</div>
-@* end of map *@
+        @* end of map *@
 
 
-<div class="row">
-    <div class="col-md-12">
-        <h3>Popular Foods</h3>
-        @*@foreach () { }*@
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Popular Foods</h3>
+                @*@foreach () { }*@
 
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <h3>Recently Added</h3>
-        @*@foreach () { }*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Recently Added</h3>
+                @*@foreach () { }*@
 
-    </div>
-</div>
+            </div>
+        </div>

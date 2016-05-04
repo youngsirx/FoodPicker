@@ -11,6 +11,7 @@ namespace FoodPicker.Models
         public int RestaurantID { get; set; }
 
         [Required]
+        [Display(Name ="Restaurant")]
         [StringLength(50, MinimumLength = 3)]
         public string Name { get; set; }
                 
