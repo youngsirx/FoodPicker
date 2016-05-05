@@ -4,69 +4,25 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Foods</h2>
+<hr />
+<div class="row">
+@foreach (var item in Model)
+{
+    
+    <div class="col-sm-6 col-md-3 center-block">
+        <div class="thumbnail">
+            <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
+                <img src="~/FoodImages/@item.ImageName" alt="@item.Name" />
+            </a>
+                    <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
+                        <div class="caption">
+                             @item.Name
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Restaurant.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        
-        <th>
-            @Html.DisplayNameFor(model => model.Price)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DateAdded)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.AverageRating)
-        </th>
-        <th></th>
-    </tr>
+                        </div>
+                    </a>
+         </div>
+    </div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Restaurant.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateAdded)
-        </td>
-        <td>
-           @if (item.AverageRating == null)
-                {
-                <p>No rating</p>
-            }
-            else
-            {
-                @Html.DisplayFor(model => item.AverageRating)
-            }
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.FoodID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.FoodID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.FoodID })
-        </td>
-    </tr>
 }
-
-</table>
+</div>

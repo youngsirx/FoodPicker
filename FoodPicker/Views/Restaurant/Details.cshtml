@@ -27,7 +27,7 @@
             <div id="googleMap" style="width:500px;height:380px;" class="center-block"></div>
         </div>
     
-    <dl class="col-md-6">
+             <dl class="col-md-6">
         <dt>
             @Html.DisplayNameFor(model => model.Owner.FirstName)
         </dt>
@@ -109,12 +109,8 @@
         </dd>
 
     </dl>
-</div>
     </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.RestaurantID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+</div>
 
 
 <div class="row">
@@ -124,3 +120,15 @@
 
     </div>
 </div>
+
+@*@{
+    var action = (User.IsInRole("admin") ? "Index" : "Listing");
+}*@
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.RestaurantID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+
+
