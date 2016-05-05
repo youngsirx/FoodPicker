@@ -107,3 +107,5 @@ namespace FoodPicker.Migrations.FoodMigrations
     }
 }
 
+//PM> add-migration -ConfigurationTypeName FoodPicker.Migrations.FoodMigrations.Configuration "RestaurantHours"
+//PM> update-database -ConfigurationTypeName FoodPicker.Migrations.FoodMigrations.Configuration

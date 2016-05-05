@@ -32,7 +32,7 @@
             @Html.DisplayNameFor(model => model.Phone)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Hours)
+            Hours
         </th>
        
         <th></th>
@@ -55,7 +55,10 @@
             @Html.DisplayFor(modelItem => item.Phone)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Hours)
+            @Html.DisplayNameFor(model => model.MondayHours):
+            @Html.DisplayFor(modelItem => item.MondayHours)<br />
+            @Html.DisplayNameFor(model => model.TuesdayHours):
+            @Html.DisplayFor(modelItem => item.TuesdayHours)<br />
         </td>
        
         <td>

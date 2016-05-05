@@ -28,8 +28,29 @@ namespace FoodPicker.Models
         [StringLength(60)]
         public string Country { get; set; }
         [StringLength(15)]
-        public string Phone { get; set; }        
-        public string Hours { get; set; }        
+        public string Phone { get; set; }
+        //hours
+        [Display(Name = "Mon")]
+        [StringLength(15)]
+        public string MondayHours { get; set; }
+        [Display(Name = "Tue")]
+        [StringLength(15)]
+        public string TuesdayHours { get; set; }
+        [Display(Name = "Wed")]
+        [StringLength(15)]
+        public string WednesdayHours { get; set; }
+        [Display(Name = "Thu")]
+        [StringLength(15)]
+        public string ThursdayHours { get; set; }
+        [Display(Name = "Fri")]
+        [StringLength(15)]
+        public string FridayHours { get; set; }
+        [Display(Name = "Sat")]
+        [StringLength(15)]
+        public string SaturdayHours { get; set; }
+        [Display(Name = "Sun")]
+        [StringLength(15)]
+        public string SundayHours { get; set; }
 
         public string Description { get; set; }
 
