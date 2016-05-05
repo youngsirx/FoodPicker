@@ -44,7 +44,7 @@ namespace FoodPicker.Models
         {
             get
             {
-                return StreetAddress + ", \n" + City + ", " + Province + ", " + PostalCode + " " + Country;
+                return StreetAddress + ", " + City + ", " + Province + ", " + PostalCode + " " + Country;
             }
         }
 
