@@ -8,6 +8,13 @@ namespace FoodPicker.ViewModels
 {
     public class FoodIndexData
     {
-        public IEnumerable<Food> Foods { get; set; }
+        public int FoodID { get; set; }
+
+        public string Name { get; set; }
+        public string ImageName {get; set;}
+        public float? AverageRating { get; set; }
+        public decimal Price { get; set; }
+        public DateTime DateAdded { get; set; }
+
     }
 }
