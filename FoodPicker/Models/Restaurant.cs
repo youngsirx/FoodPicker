@@ -40,5 +40,14 @@ namespace FoodPicker.Models
 
         public virtual  User Owner { get; set; }
 
+        public string Address
+        {
+            get
+            {
+                return StreetAddress + ", \n" + City + ", " + Province + ", " + PostalCode + " " + Country;
+            }
+        }
+
+
     }
 }
