@@ -3,7 +3,9 @@
 @{
     ViewBag.Title = "Index";
 }
-
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
 <h2>Foods</h2>
 <hr />
 <div class="row">
@@ -11,12 +13,12 @@
 {
     
     <div class="col-sm-6 col-md-3 center-block">
-        <div class="thumbnail">
-            <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
-                <img src="~/FoodImages/@item.ImageName" alt="@item.Name" />
+        <div class="thumbnail center-block">
+            <a href="@Url.Action("Details","Food", new { id = item.FoodID})" >
+                <img src="~/FoodImages/@item.ImageName" alt="@item.Name" class="img-responsive"/>
             </a>
                     <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
-                        <div class="caption">
+                        <div class="caption text-center">
                              @item.Name
 
                         </div>

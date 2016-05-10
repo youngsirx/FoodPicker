@@ -176,6 +176,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ImageResult.cs" />
+    <Compile Include="Helpers\ImageUpload.cs" />
     <Compile Include="Migrations\FoodMigrations\201605041620107_InitialCreate.cs" />
     <Compile Include="Migrations\FoodMigrations\201605041620107_InitialCreate.Designer.cs">
       <DependentUpon>201605041620107_InitialCreate.cs</DependentUpon>
