@@ -17,6 +17,7 @@ namespace FoodPicker.Migrations.FoodMigrations
 
         protected override void Seed(FoodPicker.DAL.FoodContext context)
         {
+            /*
             var users = new List<User>
             {
                 new User
@@ -89,7 +90,7 @@ namespace FoodPicker.Migrations.FoodMigrations
             };
             foods.ForEach(c => context.Foods.AddOrUpdate(p => p.Name, c));
             context.SaveChanges();
-
+            */
 
             //  This method will be called after migrating to the latest version.
 

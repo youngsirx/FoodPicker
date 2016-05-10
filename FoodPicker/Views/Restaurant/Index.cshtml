@@ -55,14 +55,42 @@
             @Html.DisplayFor(modelItem => item.Phone)
         </td>
         <td>
-            @Html.DisplayNameFor(model => model.MondayHours):
-            @Html.DisplayFor(modelItem => item.MondayHours)<br />
-            @Html.DisplayNameFor(model => model.TuesdayHours):
-            @Html.DisplayFor(modelItem => item.TuesdayHours)<br />
+            <table class="table-condensed">
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.MondayHours):</td>
+                    <td>@Html.DisplayFor(modelItem => item.MondayHours)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.TuesdayHours):</td>
+                    <td>@Html.DisplayFor(modelItem => item.TuesdayHours)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.WednesdayHours):</td>
+                    <td>@Html.DisplayFor(modelItem => item.WednesdayHours):</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.ThursdayHours):</td>
+                    <td>@Html.DisplayFor(modelItem => item.ThursdayHours)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.FridayHours):</td>
+                    <td>@Html.DisplayFor(modelItem => item.FridayHours)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.SaturdayHours):</td>
+                    <td>@Html.DisplayFor(modelItem => item.SaturdayHours)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.SundayHours):</td>
+                    <td>@Html.DisplayFor(modelItem => item.SundayHours)</td>
+                </tr>
+            </table>
         </td>
        
         <td>
-            @Html.ActionLink("Details", "Details", new { id=item.RestaurantID }) 
+            @Html.ActionLink("Details", "Details", new { id=item.RestaurantID }) |
+            @Html.ActionLink("Edit", "Edit", new { id = item.RestaurantID })
+            
         </td>
     </tr>
 }

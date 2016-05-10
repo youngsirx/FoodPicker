@@ -14,6 +14,7 @@
 
             <script src="http://maps.googleapis.com/maps/api/js"></script>
             <script>
+
             function initialize() {
                 var mapProp = {
                     center: new google.maps.LatLng(46.0878, -64.7782),
@@ -21,30 +22,54 @@
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 };
                 var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+                var content = '<h4>@Html.DisplayFor(model=>model.Name)</h4>';
+
+                var infowindow = new google.maps.InfoWindow({
+                    content: content
+                });
+                var geocoder = new google.maps.Geocoder();
+                var marker;
+                var address = '@Model.Address';
+                geocoder.geocode({ 'address': address }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        map.setCenter(results[0].geometry.location);
+                        marker = new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location
+                        });
+                        infowindow.open(map, marker);
+                    } else {
+                        alert('Geocode was not successful for the following reason: ' + status);
+                    }
+                });
+                
+               
+
             }
+
             google.maps.event.addDomListener(window, 'load', initialize);
             </script>
             <div id="googleMap" style="width:500px;height:380px;" class="center-block"></div>
         </div>
     
              <dl class="col-md-6">
-        <dt>
+        @*<dt>
             @Html.DisplayNameFor(model => model.Owner.FirstName)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Owner.FirstName)
-        </dd>
+        </dd>*@
 
-        <dt>
+        @*<dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Name)
-        </dd>
+        </dd>*@
 
-        <dt>
+        @*<dt>
             @Html.DisplayNameFor(model => model.StreetAddress)
         </dt>
 
@@ -82,6 +107,14 @@
 
         <dd>
             @Html.DisplayFor(model => model.Country)
+        </dd>*@
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+
+        <dd id="address">
+            @Html.DisplayFor(model => model.Address)
         </dd>
 
         <dt>
@@ -93,11 +126,40 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Hours)
+            Hours
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Hours)
+            <table class="table-condensed">
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.MondayHours): </td>
+                    <td>@Html.DisplayFor(model => model.MondayHours): </td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.TuesdayHours):</td>
+                    <td>@Html.DisplayFor(model => model.TuesdayHours)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.WednesdayHours):</td>
+                    <td>@Html.DisplayFor(model => model.WednesdayHours)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.ThursdayHours):</td>
+                    <td>@Html.DisplayFor(model => model.ThursdayHours)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.FridayHours):</td>
+                    <td>@Html.DisplayFor(model => model.FridayHours)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.SaturdayHours):</td>
+                    <td>@Html.DisplayFor(model => model.SaturdayHours)</td>
+                </tr>
+                <tr>
+                    <td>@Html.DisplayNameFor(model => model.SundayHours):</td>
+                    <td>@Html.DisplayFor(model => model.SundayHours)</td>
+                </tr>
+            </table>
         </dd>
 
         <dt>
