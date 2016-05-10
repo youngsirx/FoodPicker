@@ -63,6 +63,11 @@ namespace FoodPicker.Models
 
         public string Description { get; set; }
 
+        [Display(Name ="Website")]
+        [DataType(DataType.Url)]
+        [StringLength(100)]
+        public string Url { get; set; }
+
         [Display(Name = "Owner")]
         public int UserID { get; set; }
 

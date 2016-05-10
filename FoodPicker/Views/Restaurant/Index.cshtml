@@ -34,7 +34,9 @@
         <th>
             Hours
         </th>
-       
+        <th>
+            @Html.DisplayNameFor(model => model.Url)
+        </th>      
         <th></th>
     </tr>
 
@@ -130,7 +132,10 @@
                         </table>*@
 
                     </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Url)
 
+        </td>
         <td>
             @Html.ActionLink("Details", "Details", new { id=item.RestaurantID }) |
             @Html.ActionLink("Edit", "Edit", new { id = item.RestaurantID })

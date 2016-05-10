@@ -184,6 +184,10 @@
     <Compile Include="Migrations\FoodMigrations\201605051745105_RestaurantHours.Designer.cs">
       <DependentUpon>201605051745105_RestaurantHours.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\FoodMigrations\201605101823275_RestaurantWebsite.cs" />
+    <Compile Include="Migrations\FoodMigrations\201605101823275_RestaurantWebsite.Designer.cs">
+      <DependentUpon>201605101823275_RestaurantWebsite.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\FoodMigrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Category.cs" />
@@ -286,6 +290,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\FoodMigrations\201605051745105_RestaurantHours.resx">
       <DependentUpon>201605051745105_RestaurantHours.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\FoodMigrations\201605101823275_RestaurantWebsite.resx">
+      <DependentUpon>201605101823275_RestaurantWebsite.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
