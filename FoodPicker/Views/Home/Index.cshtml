@@ -75,7 +75,9 @@
         <h3>Recently Added</h3>
         @{
             List<FoodPicker.ViewModels.FoodIndexData> added = ViewBag.recentlyadded;
-            @
+            
+        foreach (var item in added)
+        {
                 <div class="col-sm-6 col-md-3 center-block">
                     <div class="thumbnail">
                         <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
