@@ -31,24 +31,31 @@ namespace FoodPicker.Models
         public string Phone { get; set; }
         //hours
         [Display(Name = "Mon")]
+        [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string MondayHours { get; set; }
         [Display(Name = "Tue")]
+        [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string TuesdayHours { get; set; }
         [Display(Name = "Wed")]
+        [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string WednesdayHours { get; set; }
         [Display(Name = "Thu")]
+        [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string ThursdayHours { get; set; }
         [Display(Name = "Fri")]
+        [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string FridayHours { get; set; }
         [Display(Name = "Sat")]
+        [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string SaturdayHours { get; set; }
         [Display(Name = "Sun")]
+        [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string SundayHours { get; set; }
 
