@@ -49,7 +49,7 @@ namespace FoodPicker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "RestaurantID,Name,StreetAddress,City,Province,PostalCode,Country,Phone,Hours,Description,UserID")] Restaurant restaurant)
+        public ActionResult Create([Bind(Include = "RestaurantID,Name,StreetAddress,City,Province,PostalCode,Country,Phone,MondayHours,TuesdayHours,WednesdayHours,ThursdayHours,FridayHours,SaturdayHours,SundayHours,Description,UserID")] Restaurant restaurant)
         {
             if (ModelState.IsValid)
             {

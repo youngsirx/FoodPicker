@@ -55,38 +55,82 @@
             @Html.DisplayFor(modelItem => item.Phone)
         </td>
         <td>
-            <table class="table-condensed">
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.MondayHours):</td>
-                    <td>@Html.DisplayFor(modelItem => item.MondayHours)</td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.TuesdayHours):</td>
-                    <td>@Html.DisplayFor(modelItem => item.TuesdayHours)</td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.WednesdayHours):</td>
-                    <td>@Html.DisplayFor(modelItem => item.WednesdayHours):</td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.ThursdayHours):</td>
-                    <td>@Html.DisplayFor(modelItem => item.ThursdayHours)</td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.FridayHours):</td>
-                    <td>@Html.DisplayFor(modelItem => item.FridayHours)</td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.SaturdayHours):</td>
-                    <td>@Html.DisplayFor(modelItem => item.SaturdayHours)</td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.SundayHours):</td>
-                    <td>@Html.DisplayFor(modelItem => item.SundayHours)</td>
-                </tr>
-            </table>
-        </td>
-       
+    <div class="form-group">
+
+        <select class="form-control" id="RestaurantID" name="RestaurantID">
+            @{
+                var day = DateTime.Today.DayOfWeek;
+            }
+            <option @if (day == DayOfWeek.Monday) {@: selected="selected" 
+                    } value="1">
+                @Html.DisplayNameFor(model => model.MondayHours):
+                @Html.DisplayFor(modelItem => item.MondayHours)
+            </option>
+            <option @if (day == DayOfWeek.Tuesday) {@: selected="selected" 
+                    } value="2">
+                @Html.DisplayNameFor(model => model.TuesdayHours):
+                @Html.DisplayFor(modelItem => item.TuesdayHours)
+            </option>
+            <option @if (day == DayOfWeek.Wednesday) {@: selected="selected" 
+                    }value="3">
+                @Html.DisplayNameFor(model => model.WednesdayHours):
+                @Html.DisplayFor(modelItem => item.WednesdayHours)
+            </option>
+            <option @if (day == DayOfWeek.Thursday) {@: selected="selected" 
+                    } value="4">
+                @Html.DisplayNameFor(model => model.ThursdayHours):
+                @Html.DisplayFor(modelItem => item.ThursdayHours)
+            </option>
+            <option @if (day == DayOfWeek.Friday) {@: selected="selected" 
+                    } value="5">
+                @Html.DisplayNameFor(model => model.FridayHours):
+                @Html.DisplayFor(modelItem => item.FridayHours)
+            </option>
+            <option @if (day == DayOfWeek.Saturday) {@: selected="selected" 
+                    } value="6">
+                @Html.DisplayNameFor(model => model.SaturdayHours):
+                @Html.DisplayFor(modelItem => item.SaturdayHours)
+            </option>
+            <option @if (day == DayOfWeek.Sunday) {@: selected="selected" 
+                    } value="7">
+                @Html.DisplayNameFor(model => model.SundayHours):
+                @Html.DisplayFor(modelItem => item.SundayHours)
+            </option>
+        </select>
+    </div>
+                        @*<table class="table-condensed">
+                            <tr>
+                                <td>@Html.DisplayNameFor(model => model.MondayHours):</td>
+                                <td>@Html.DisplayFor(modelItem => item.MondayHours)</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(model => model.TuesdayHours):</td>
+                                <td>@Html.DisplayFor(modelItem => item.TuesdayHours)</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(model => model.WednesdayHours):</td>
+                                <td>@Html.DisplayFor(modelItem => item.WednesdayHours):</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(model => model.ThursdayHours):</td>
+                                <td>@Html.DisplayFor(modelItem => item.ThursdayHours)</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(model => model.FridayHours):</td>
+                                <td>@Html.DisplayFor(modelItem => item.FridayHours)</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(model => model.SaturdayHours):</td>
+                                <td>@Html.DisplayFor(modelItem => item.SaturdayHours)</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(model => model.SundayHours):</td>
+                                <td>@Html.DisplayFor(modelItem => item.SundayHours)</td>
+                            </tr>
+                        </table>*@
+
+                    </td>
+
         <td>
             @Html.ActionLink("Details", "Details", new { id=item.RestaurantID }) |
             @Html.ActionLink("Edit", "Edit", new { id = item.RestaurantID })
