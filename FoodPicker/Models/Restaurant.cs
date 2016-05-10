@@ -11,12 +11,13 @@ namespace FoodPicker.Models
         public int RestaurantID { get; set; }
 
         [Required]
-        [Display(Name ="Restaurant")]
+        [Display(Name ="Restaurant Name")]
         [StringLength(50, MinimumLength = 3)]
         public string Name { get; set; }
                 
         [Required]
         [StringLength(80, MinimumLength = 3)]
+        [Display(Name = "Address")]
         public string StreetAddress { get; set; }
         [Required]
         [StringLength(50, MinimumLength = 3)]
@@ -24,43 +25,50 @@ namespace FoodPicker.Models
         [StringLength(50)]
         public string Province { get; set; }
         [StringLength(10)]
+        [Display(Name = "Postal Code")]
         public string PostalCode { get; set; }
         [StringLength(60)]
         public string Country { get; set; }
         [StringLength(15)]
         public string Phone { get; set; }
         //hours
-        [Display(Name = "Mon")]
+        [Display(Name = "Monday")]
         [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string MondayHours { get; set; }
-        [Display(Name = "Tue")]
+        [Display(Name = "Tuesday")]
         [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string TuesdayHours { get; set; }
-        [Display(Name = "Wed")]
+        [Display(Name = "Wednesday")]
         [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string WednesdayHours { get; set; }
-        [Display(Name = "Thu")]
+        [Display(Name = "Thursday")]
         [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string ThursdayHours { get; set; }
-        [Display(Name = "Fri")]
+        [Display(Name = "Friyday")]
         [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string FridayHours { get; set; }
-        [Display(Name = "Sat")]
+        [Display(Name = "Saturday")]
         [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string SaturdayHours { get; set; }
-        [Display(Name = "Sun")]
+        [Display(Name = "Sunday")]
         [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string SundayHours { get; set; }
 
         public string Description { get; set; }
 
+        [Display(Name ="Website")]
+        [DataType(DataType.Url)]
+        [StringLength(100)]
+        public string Url { get; set; }
+
+        [Display(Name = "Owner")]
         public int UserID { get; set; }
 
 
