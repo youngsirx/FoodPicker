@@ -104,6 +104,11 @@ namespace FoodPicker.Migrations.FoodMigrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
+
+
+            //jkhalack: seed roles
+
+            //jkhalack: end seeding roles
         }
     }
 }
