@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using FoodPicker.Models;
+using FoodPicker.DAL;
+using System.Data.Entity.Migrations;
 
 namespace FoodPicker.Controllers
 {
@@ -17,6 +19,7 @@ namespace FoodPicker.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        
 
         public AccountController()
         {
@@ -155,6 +158,39 @@ namespace FoodPicker.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    //jkhalack: add user to User Db
+                    FoodContext db = new FoodContext();
+                    var foodUser = new User {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Email = model.Email
+                    };
+                    //db.Users.Add(foodUser);
+                    User existingUser = db.Users.Where(u => u.Email == model.Email).SingleOrDefault();
+                    if (existingUser == null )
+                    {
+                        db.Users.Add(foodUser);
+                    }
+                    else
+                    {
+                        db.Users.AddOrUpdate(u => u.Email, foodUser);
+                    }
+                    
+                    db.SaveChanges();
+
+                    UserManager.AddToRole(user.Id, "user");
+
+                    //jkhalack: to supply this option in the registration view
+                    bool isRestaurantOwner = model.isRestaurantOwner;
+                    if(isRestaurantOwner)
+                    {
+                        UserManager.AddToRole(user.Id, "owner");
+                    }
+
+                    //jkhalack: end adding to User Db
+
+
+
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771

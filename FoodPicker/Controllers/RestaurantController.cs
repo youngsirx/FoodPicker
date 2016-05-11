@@ -40,7 +40,7 @@ namespace FoodPicker.Controllers
         // GET: Restaurant/Create
         public ActionResult Create()
         {
-            ViewBag.UserID = new SelectList(db.Users, "UserID", "FirstName");
+            ViewBag.UserID = new SelectList(db.Users, "UserID", "FullName");
             return View();
         }
 
@@ -58,7 +58,7 @@ namespace FoodPicker.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.UserID = new SelectList(db.Users, "UserID", "FirstName", restaurant.UserID);
+            ViewBag.UserID = new SelectList(db.Users, "UserID", "FullName", restaurant.UserID);
             return View(restaurant);
         }
 
