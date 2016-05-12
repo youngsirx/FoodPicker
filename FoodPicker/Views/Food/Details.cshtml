@@ -58,11 +58,11 @@
                 
                 @if (Model.AverageRating == null)
                 {
-                    <p>No rating</p>
+                    @Html.BootstrapRating().ReadOnly.Value(0)
                 }
                 else
                 {
-                    @Html.DisplayFor(model => model.AverageRating)
+                    @Html.BootstrapRating().ReadOnly.Value((double)Model.AverageRating)
                 }
 
             </dd>
