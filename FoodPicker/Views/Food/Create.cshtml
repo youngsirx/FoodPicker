@@ -5,14 +5,15 @@
 }
 
 <h2>Create</h2>
-
+<div class="row">
 @using (Html.BeginForm("Create", "Food", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
+    <div class="form-horizontal col-lg-8">
+
         <h4>Food</h4>
-        <hr />
+        
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -31,12 +32,12 @@
         </div>
         @* Old image form *@
         @*<div class="form-group">
-            @Html.LabelFor(model => model.ImageName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ImageName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ImageName, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
+                @Html.LabelFor(model => model.ImageName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ImageName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ImageName, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
 
         @* New image upload form *@
         <div class="form-group">
@@ -64,32 +65,75 @@
             </div>
         </div>
 
-        
+
         @*<div class="form-group">
-            @Html.LabelFor(model => model.DateAdded, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DateAdded, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DateAdded, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
+                @Html.LabelFor(model => model.DateAdded, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DateAdded, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DateAdded, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
 
         @* Average rating. shouldnt be added on its own *@
         @*<div class="form-group">
-            @Html.LabelFor(model => model.AverageRating, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.AverageRating, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.AverageRating, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
+                @Html.LabelFor(model => model.AverageRating, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.AverageRating, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.AverageRating, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
 
+     
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>
+
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+<div class="col-md-4">
+
+
+<div class="form-group">
+    <div class="caption"><h2>Pick some categories!</h2></div>
+        <table class="table table-condensed">
+
+            @{
+                int cnt = 0;
+                List<FoodPicker.ViewModels.CategoryData> categories = ViewBag.Catagories;
+
+                foreach (var category in categories)
+                {
+                    @* mwilliams: Using @: to explicitly indicate the start of content
+                        in this case it will add a space
+                        http://weblogs.asp.net/scottgu/asp-net-mvc-3-razor-s-and-lt-text-gt-syntax
+                    *@
+                if (cnt++ % 3 == 0)
+                {
+                    @:<tr>
+                        }
+                        @:<td style="border:none">
+                            <input type="checkbox"
+                                   name="selectedCategory"
+                                   value="@category.CategoryID"
+                                   @(Html.Raw(category.Assigned ? "checked=\"checked\"" : "")) />
+                            @category.CategoryID @:  @category.CategoryName
+                            @:</td>
+                        }
+                        @:</tr>
+
+
+                    
+                }
+            </table>
+        
+    </div>
+    </div>
 </div>
+    
+
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>

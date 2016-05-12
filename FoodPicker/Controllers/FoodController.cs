@@ -10,6 +10,7 @@ using FoodPicker.DAL;
 using FoodPicker.Models;
 using System.Threading.Tasks;
 using FoodPicker.Helpers;
+using FoodPicker.ViewModels;
 
 namespace FoodPicker.Controllers
 {
@@ -39,28 +40,46 @@ namespace FoodPicker.Controllers
             return View(food);
         }
 
+        //jyoung added check box
         // GET: Food/Create
         public ActionResult Create()
         {
-            ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name");
+             ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name");
+
+            var food = new Food();
+            food.Categories = new List<Category>();
+            PopulateAssignedCategories(food);
+
             return View();
         }
 
         // POST: Food/Create
+        //jyoung added check box
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "FoodID,Name,Description,RestaurantID,Price")] Food food, HttpPostedFileBase ImageName)
+        public async Task<ActionResult> Create([Bind(Include = "FoodID,Name,Description,RestaurantID,Price")] Food food, HttpPostedFileBase ImageName, string[] selectedCategory)
         {
 
-            ViewBag.ResturantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
+            
+
+            if(selectedCategory != null)
+            {
+                food.Categories = new List<Category>();
+                foreach(var cat in selectedCategory)
+                {
+                    var categoryToAdd = db.Categories.Find(int.Parse(cat));
+                    food.Categories.Add(categoryToAdd);
+                }
+            }
 
             //jyoung: added image upload
             //added HttpPostedFileBase ImageName args in method
             //Also the form needs an enctype="multipart/form-data"
             if (ModelState.IsValid)
             {
+                               
                 //check if you have anything to upload
                 if (ImageName != null && ImageName.ContentLength > 0)
                 {
@@ -107,19 +126,50 @@ namespace FoodPicker.Controllers
                 }
                
             }//end of modelstate
+            ViewBag.ResturantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
 
+            PopulateAssignedCategories(food);
             
             return View(food);
         }
 
+        //Jyoung added controller to receive the categroies
+        private void PopulateAssignedCategories(Food food)
+        {
+            var allCategories = db.Categories;
+
+            var foodCategories = new HashSet<int>(food.Categories.Select(c => c.CategoryID));
+
+            var viewModel = new List<CategoryData>();
+
+            foreach (var category in allCategories)
+            { 
+                viewModel.Add(new CategoryData
+                {
+                    CategoryID = category.CategoryID,
+                    CategoryName = category.CategoryName,
+                    Assigned = foodCategories.Contains(category.CategoryID)
+                });
+            }
+            ViewBag.Catagories = viewModel;
+
+        }
+
         // GET: Food/Edit/5
+        //jyoung added check box
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Food food = db.Foods.Find(id);
+            //replaced scffolded code to include office assignements
+            //Food food = db.Foods.Find(id);
+            Food food = db.Foods
+                .Include(i => i.Categories)
+                .Where(i => i.FoodID == id).Single();
+
+            PopulateAssignedCategories(food);
             if (food == null)
             {
                 return HttpNotFound();
@@ -133,98 +183,147 @@ namespace FoodPicker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Name,Description,Price")] Food food, HttpPostedFileBase ImageName)
+        public async Task<ActionResult> EditPost(int? id, string[] selectedCategories, HttpPostedFileBase ImageName)
         {
-
-            ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
-            if (ModelState.IsValid)
+            if (id == null)
             {
-                //check if you have anything to upload
-                if (ImageName != null && ImageName.ContentLength > 0)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            //replace with new code
+            //var foodToUpdate = db.Foods.Find(id);
+
+            var foodToUpdate = db.Foods
+                .Include(i => i.Categories)
+                .Where(i => i.FoodID == id).Single();
+
+
+            if (TryUpdateModel(foodToUpdate, "",
+                new string[] { "Name", "Description", "Price","Categories" }))
+            {
+            } try
                 {
 
+                UpdateFoodCategory(selectedCategories, foodToUpdate);
+                     await db.SaveChangesAsync();
+         
+                    }
+                    catch(Exception)
+                    {
+                          ModelState.AddModelError("", "Unable to save changes.  Try again later!");
+                    }
+                if (ImageName != null && ImageName.ContentLength > 0)
+                {
+                    //do we have anything to upload - yes
                     var validImageTypes = new string[]
-                   {
+                    {
                         //"image/gif",
                         //"image/jpg",
                         //"image/jpeg",
                         "image/png"
-                   };
+                    };
                     if (!validImageTypes.Contains(ImageName.ContentType))
                     {
                         //file being uploaded is not a png -display error
-                        ModelState.AddModelError("", "Please use a PNG image only.");
-                        return View(food);
+                        ModelState.AddModelError("", "Please choose a PNG image.");
+                        return View(foodToUpdate);
                     }
-                                       
-                    //save new food to database
-                    db.Foods.Add(food);
-                    await db.SaveChangesAsync();
 
-                    //retrieve the IDENTITY (new name for image) FROM sql sERVER
-                    string pictureName = food.ImageName.ToString();
-                    
-                    //next rename, scale an upload the image.
-                    ImageUpload imageUpload = new ImageUpload { Width = 200, Height = 275 };
-                    ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
+                       string pictureName = foodToUpdate.ToString();
 
-                    
-                    return RedirectToAction("Details", new { id = food.FoodID });
+                        //next rename, scale an upload the image.
+                        ImageUpload imageUpload = new ImageUpload { Width = 200, Height = 275 };
+                        ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
+
+                        return RedirectToAction("Details", new { id = foodToUpdate });
                 }
-              
-  
-            }
-          
-            return View(food);
+
+                 PopulateAssignedCategories(foodToUpdate);
+            return View("Details", new { id = foodToUpdate });
         }
-        //public async Task<ActionResult> EditPost(int? id, HttpPostedFileBase ImageName)
+
+        private void UpdateFoodCategory(string[] selectedCategorey, Food foodToUpdate)
+        {
+            if(selectedCategorey ==null)
+            {
+                foodToUpdate.Categories = new List<Category>();
+                return;
+            }
+
+            var selectedCategoryHS = new HashSet<string>(selectedCategorey);
+            var foodCategory = new HashSet<int>(foodToUpdate.Categories.Select(i => i.CategoryID));
+
+            //Loop all course in database
+            foreach (var cat in db.Categories)
+            {
+                //Add a new course to instructor assignment
+                if (selectedCategoryHS.Contains(cat.CategoryID.ToString()))
+                {
+                    if (!foodCategory.Contains(cat.CategoryID))
+                    {
+                        foodToUpdate.Categories.Add(cat);
+                    }
+                }
+                else
+                {
+
+                    //Remove existing course to instructor assignment
+                    if (foodCategory.Contains(cat.CategoryID))
+                    {
+                        foodToUpdate.Categories.Remove(cat);
+                    }
+                }//end of if 
+
+
+            }//end of foreach
+
+
+        }
+
+        //public async Task<ActionResult> Edit([Bind(Include = "Name,Description,Price")] Food food, HttpPostedFileBase ImageName)
         //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
 
-        //    var foodToUpdate = db.Foods.Find(id);
-        //    if (TryUpdateModel(foodToUpdate, "",
-        //        new string[] { "Name", "Description", "Price" }))
+        //    ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
+        //    if (ModelState.IsValid)
         //    {
-
+        //        //check if you have anything to upload
         //        if (ImageName != null && ImageName.ContentLength > 0)
         //        {
-        //            //do we have anything to upload - yes
+
         //            var validImageTypes = new string[]
-        //            {
+        //           {
         //                //"image/gif",
         //                //"image/jpg",
         //                //"image/jpeg",
         //                "image/png"
-        //            };
+        //           };
         //            if (!validImageTypes.Contains(ImageName.ContentType))
         //            {
         //                //file being uploaded is not a png -display error
-        //                ModelState.AddModelError("", "Please choose a PNG image.");
-        //                return View(foodToUpdate);
-
+        //                ModelState.AddModelError("", "Please use a PNG image only.");
+        //                return View(food);
         //            }
 
-        //            try
-        //            {
-        //                await db.SaveChangesAsync();
-        
-        //                string pictureName = foodToUpdate.ToString();
+        //            //save new food to database
+        //            db.Foods.Add(food);
+        //            await db.SaveChangesAsync();
 
-        //                //next rename, scale an upload the image.
-        //                ImageUpload imageUpload = new ImageUpload { Width = 200, Height = 275 };
-        //                ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
+        //            //retrieve the IDENTITY (new name for image) FROM sql sERVER
+        //            string pictureName = food.ImageName.ToString();
 
-        //                return RedirectToAction("Details", new {id = foodToUpdate });
-        //            }
-        //          
+        //            //next rename, scale an upload the image.
+        //            ImageUpload imageUpload = new ImageUpload { Width = 200, Height = 275 };
+        //            ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
+
+
+        //            return RedirectToAction("Details", new { id = food.FoodID });
         //        }
 
+
         //    }
-        //    return View("Details", new { id = foodToUpdate });
+
+        //    return View(food);
         //}
+
 
 
 
