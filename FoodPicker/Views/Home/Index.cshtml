@@ -53,20 +53,22 @@
         List<FoodPicker.ViewModels.FoodIndexData> pop = ViewBag.popular;
         foreach (var item in pop)
         {
-            <div class="col-sm-6 col-md-3 center-block">
+            <div class="col-sm-6 col-md-3 center-block text-center">
                 <div class="thumbnail">
                     <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
+
                         <img src="~/FoodImages/@item.ImageName" alt="@item.Name" />
                     </a>
-                    <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
-                        <div class="caption">
-                            @item.Name                            
-                        </div>
-                        <div class="">
-                            @item.AverageRating
-                        </div>
-                    </a>
                 </div>
+                <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
+                    <div class="caption">
+                        @item.Name
+                    </div>
+                    <div class="">
+                        @Html.BootstrapRating().ReadOnly.Value((double)@item.AverageRating)
+                    </div>
+                </a>
+
             </div>
 
         }
@@ -81,20 +83,28 @@
             
         foreach (var item in added)
         {
-                <div class="col-sm-6 col-md-3 center-block">
+                <div class="col-sm-6 col-md-3 center-block text-center">
                     <div class="thumbnail">
                         <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
                             <img src="~/FoodImages/@item.ImageName" alt="@item.Name" />
                         </a>
+                    </div>
                         <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
                             <div class="caption">
                                 @item.Name
                             </div>
-                            <div class="">
-                                @item.AverageRating
+                            <div>
+                                @if (@item.AverageRating == null)
+                                {
+                                    @Html.BootstrapRating().ReadOnly.Value(0)
+                                }
+                                else
+                                {
+                                    @Html.BootstrapRating().ReadOnly.Value((double)@item.AverageRating)
+                                }
                             </div>
                         </a>
-                    </div>
+                   
                 </div>
 
             }

@@ -9,22 +9,33 @@
 <h2>Foods</h2>
 <hr />
 <div class="row">
-@foreach (var item in Model)
-{
-    
-    <div class="col-sm-6 col-md-3 center-block">
-        <div class="thumbnail center-block">
-            <a href="@Url.Action("Details","Food", new { id = item.FoodID})" >
-                <img src="~/FoodImages/@item.ImageName" alt="@item.Name" class="img-responsive"/>
+    @foreach (var item in Model)
+    {
+
+        <div class="col-sm-6 col-md-3 center-block">
+            <div class="thumbnail center-block">
+                <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
+                    <img src="~/FoodImages/@item.ImageName" alt="@item.Name" class="img-responsive" />
+                </a>
+            </div>
+            <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
+                <div class="caption text-center">
+                    @item.Name
+
+                </div>
+                <div class="text-center">
+                    @if (@item.AverageRating == null)
+                    {
+                        @Html.BootstrapRating().ReadOnly.Value(0)
+                    }
+                    else
+                    {
+                        @Html.BootstrapRating().ReadOnly.Value((double)@item.AverageRating)
+                    }
+                </div>
             </a>
-                    <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
-                        <div class="caption text-center">
-                             @item.Name
 
-                        </div>
-                    </a>
-         </div>
-    </div>
+        </div>
 
-}
+    }
 </div>
