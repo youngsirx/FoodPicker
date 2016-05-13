@@ -6,12 +6,14 @@
 
 <h2>@Html.DisplayFor(model => model.Name)</h2>
 <hr />
-
+<p>
+    @Html.ActionLink("Add New Food", "Create", "Food")
+</p>
 <div>
     
     <div class="row">
-        <div class="col-md-6">
 
+        <div class="col-md-6"> 
             <script src="http://maps.googleapis.com/maps/api/js"></script>
             <script>
 
@@ -22,14 +24,15 @@
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 };
                 var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
-                var content = '<h4>@Html.DisplayFor(model=>model.Name)</h4>';
 
-                var infowindow = new google.maps.InfoWindow({
-                    content: content
-                });
+                
+
+                var infowindow = new google.maps.InfoWindow();
+                infowindow.setContent('<h4>@Model.Name</h4>');
                 var geocoder = new google.maps.Geocoder();
                 var marker;
                 var address = '@Model.Address';
+
                 geocoder.geocode({ 'address': address }, function (results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
                         map.setCenter(results[0].geometry.location);
@@ -38,12 +41,11 @@
                             position: results[0].geometry.location
                         });
                         infowindow.open(map, marker);
-                    } else {
-                        alert('Geocode was not successful for the following reason: ' + status);
                     }
+                    // else {
+                    //    alert('Geocode was not successful for the following reason: ' + status);
+                    //}
                 });
-                
-               
 
             }
 
@@ -52,134 +54,141 @@
             <div id="googleMap" style="width:500px;height:380px;" class="center-block"></div>
         </div>
     
-             <dl class="col-md-6">
-        @*<dt>
-            @Html.DisplayNameFor(model => model.Owner.FirstName)
-        </dt>
+        <div class="col-md-6">
+            
+            <img src="../../RestoImages/@Model.ImageName" class="img img-responsive img-rounded"/>
+            <dl>
 
-        <dd>
-            @Html.DisplayFor(model => model.Owner.FirstName)
-        </dd>*@
 
-        @*<dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+                @*<dt>
+                    @Html.DisplayNameFor(model => model.Owner.FirstName)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>*@
+                <dd>
+                    @Html.DisplayFor(model => model.Owner.FirstName)
+                </dd>*@
 
-        @*<dt>
-            @Html.DisplayNameFor(model => model.StreetAddress)
-        </dt>
+                @*<dt>
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.StreetAddress)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>*@
 
-        <dt>
-            @Html.DisplayNameFor(model => model.City)
-        </dt>
+                @*<dt>
+                    @Html.DisplayNameFor(model => model.StreetAddress)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.City)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.StreetAddress)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Province)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.City)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Province)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.City)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.PostalCode)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Province)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.PostalCode)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Province)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Country)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.PostalCode)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Country)
-        </dd>*@
+                <dd>
+                    @Html.DisplayFor(model => model.PostalCode)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Country)
+                </dt>
 
-        <dd id="address">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Country)
+                </dd>*@
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Address)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
+                <dd id="address">
+                    @Html.DisplayFor(model => model.Address)
+                </dd>
 
-        <dt>
-            Hours
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Phone)
+                </dt>
 
-        <dd>
-            <table class="table-condensed">
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.MondayHours): </td>
-                    <td>@Html.DisplayFor(model => model.MondayHours): </td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.TuesdayHours):</td>
-                    <td>@Html.DisplayFor(model => model.TuesdayHours)</td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.WednesdayHours):</td>
-                    <td>@Html.DisplayFor(model => model.WednesdayHours)</td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.ThursdayHours):</td>
-                    <td>@Html.DisplayFor(model => model.ThursdayHours)</td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.FridayHours):</td>
-                    <td>@Html.DisplayFor(model => model.FridayHours)</td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.SaturdayHours):</td>
-                    <td>@Html.DisplayFor(model => model.SaturdayHours)</td>
-                </tr>
-                <tr>
-                    <td>@Html.DisplayNameFor(model => model.SundayHours):</td>
-                    <td>@Html.DisplayFor(model => model.SundayHours)</td>
-                </tr>
-            </table>
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Phone)
+                </dd>
 
-                 <dt>
-                     @Html.DisplayNameFor(model => model.Url)
-                 </dt>
+                <dt>
+                    Hours
+                </dt>
 
-                 <dd>
-                     @Html.DisplayFor(model => model.Url)
-                 </dd>
+                <dd>
+                    <table class="table-condensed">
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.MondayHours): </td>
+                            <td>@Html.DisplayFor(model => model.MondayHours): </td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.TuesdayHours):</td>
+                            <td>@Html.DisplayFor(model => model.TuesdayHours)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.WednesdayHours):</td>
+                            <td>@Html.DisplayFor(model => model.WednesdayHours)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.ThursdayHours):</td>
+                            <td>@Html.DisplayFor(model => model.ThursdayHours)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.FridayHours):</td>
+                            <td>@Html.DisplayFor(model => model.FridayHours)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.SaturdayHours):</td>
+                            <td>@Html.DisplayFor(model => model.SaturdayHours)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.SundayHours):</td>
+                            <td>@Html.DisplayFor(model => model.SundayHours)</td>
+                        </tr>
+                    </table>
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Url)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.Url)
+                </dd>
 
-    </dl>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+
+            </dl>
+        </div>
     </div>
+
 </div>
 
 
@@ -194,6 +203,29 @@
 @*@{
     var action = (User.IsInRole("admin") ? "Index" : "Listing");
 }*@
+
+
+<div class="row">
+    @foreach (var item in Model.Foods)
+    {
+
+        <div class="col-sm-6 col-md-3 center-block">
+            <div class="thumbnail center-block">
+                <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
+                    <img src="~/FoodImages/@item.ImageName" alt="@item.Name" class="img-responsive" />
+                </a>
+                <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
+                    <div class="caption text-center">
+                        @item.Name
+
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    }
+</div>
+
 
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.RestaurantID }) |

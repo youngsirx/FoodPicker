@@ -7,7 +7,7 @@
 <h2>Create</h2>
 <div class="row">
 
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Create", "Restaurant", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
@@ -106,6 +106,21 @@
            
         </div>
         <div class="form-horizontal col-md-6">
+
+
+
+            @* Image upload form *@
+            <div class="form-group">
+                <label class="control-label col-md-2" for="ImageName">Image</label>
+                <div class="col-md-10">
+                    <input type="file" id="ImageName"
+                           name="ImageName" accept="image/*.jpg" class="form-control" />
+                </div>
+            </div>
+
+
+            <hr />
+
             <h4>Hours</h4>
             <hr />
 

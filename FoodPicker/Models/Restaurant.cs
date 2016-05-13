@@ -84,6 +84,12 @@ namespace FoodPicker.Models
             }
         }
 
-
+        public string ImageName
+        {
+            get
+            {
+                return RestaurantID + ".jpg";
+            }
+        }
     }
 }

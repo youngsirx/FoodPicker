@@ -182,6 +182,7 @@
     </Compile>
     <Compile Include="Helpers\ImageResult.cs" />
     <Compile Include="Helpers\ImageUpload.cs" />
+    <Compile Include="Helpers\RestoImageUpload.cs" />
     <Compile Include="Migrations\FoodMigrations\201605041620107_InitialCreate.cs" />
     <Compile Include="Migrations\FoodMigrations\201605041620107_InitialCreate.Designer.cs">
       <DependentUpon>201605041620107_InitialCreate.cs</DependentUpon>
@@ -230,6 +231,12 @@
     <Content Include="FoodImages\2.jpg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="RestoImages\2.jpg" />
+    <Content Include="RestoImages\3.jpg" />
+    <Content Include="RestoImages\5.jpg" />
+    <Content Include="RestoImages\6.jpg" />
+    <Content Include="RestoImages\7.jpg" />
+    <Content Include="RestoImages\8.jpg" />
     <Content Include="Scripts\bootstrap-rating\bootstrap-rating.js" />
     <Content Include="Scripts\bootstrap-rating\bootstrap-rating.min.js" />
     <Content Include="Scripts\bootstrap.js" />
