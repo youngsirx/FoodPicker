@@ -64,6 +64,7 @@ namespace FoodPicker.Models
         public string Description { get; set; }
 
         [Display(Name ="Website")]
+        [DisplayFormat(NullDisplayText = "No website provided")]
         [DataType(DataType.Url)]
         [StringLength(100)]
         public string Url { get; set; }
