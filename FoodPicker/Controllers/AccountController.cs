@@ -108,6 +108,47 @@ namespace FoodPicker.Controllers
             }
         }
 
+
+        //jkhalack
+        //GET: /Account/ResendEmail
+        [AllowAnonymous]
+        public ActionResult ResendEmail()
+        {
+            return View();
+        }
+
+        //jkhalack
+        //POST: /Account/ResendEmail
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResendEmail(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                //validation has passed - resend the email
+                var user = await UserManager.FindByNameAsync(model.Email);
+                if (user == null)
+                {
+                    //Do not reveal that the user does not exist
+                    return View("DisplayEmail");
+                }
+                //user found
+                // Send an email with this link
+                string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                return View("DisplayEmail");
+
+            }
+            //if we reach this point - validation failed - redisplay form
+            return View(model);
+        }
+
+
+
+
         //
         // GET: /Account/VerifyCode
         [AllowAnonymous]
@@ -204,19 +245,20 @@ namespace FoodPicker.Controllers
                     //jkhalack: end adding to User Db
 
 
+                    //jkhalack: remove auto-sign in
+                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
-                }
+                    //return RedirectToAction("Index", "Home");
+                    return View("DisplayEmail");
+                }//end result.succeded
                 AddErrors(result);
-            }
+            }//end modelState is valid
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -261,10 +303,10 @@ namespace FoodPicker.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form

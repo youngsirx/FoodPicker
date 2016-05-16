@@ -19,7 +19,40 @@ namespace FoodPicker
         public Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            //return Task.FromResult(0);
+
+
+            //jkhalack: add gmail
+
+
+            //credentials
+            var credentialUserName = "yourgmail.com";
+            var sentFrom = "\"IdentitySample.com\"<yourgmail.com>";
+            var pwd = "yourpassword";
+
+
+
+
+            //configure the client
+            System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("smtp.gmail.com");
+            client.Port = 587;
+            client.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+
+            //create the creentials
+            System.Net.NetworkCredential credentials =
+                new System.Net.NetworkCredential(credentialUserName, pwd);
+            client.EnableSsl = true;
+            client.Credentials = credentials;
+
+            //create the message
+            var mail = new System.Net.Mail.MailMessage(sentFrom, message.Destination);
+            mail.Subject = message.Subject;
+            mail.Body = message.Body;
+            //send
+            return client.SendMailAsync(mail);
+
+            //jkhalack: end gmail
         }
     }
 

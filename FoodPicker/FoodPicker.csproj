@@ -306,6 +306,8 @@
     <Content Include="Views\Food\Edit.cshtml" />
     <Content Include="Views\Food\Index.cshtml" />
     <Content Include="Views\Manage\UserInfo.cshtml" />
+    <Content Include="Views\Account\ResendEmail.cshtml" />
+    <Content Include="Views\Account\DisplayEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

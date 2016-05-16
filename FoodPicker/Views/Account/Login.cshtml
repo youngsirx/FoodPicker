@@ -14,6 +14,12 @@
                 <h4>Use a local account to log in.</h4>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                if (ViewBag.EmailNotConfirmed == true)
+                {
+                    //jkhalack: email not confirmed - show link to resend
+                    <a href="@Url.Action("ResendEmail")" class="btn btn-warning">Resend Email</a>
+                }
+
                 <div class="form-group">
                     @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
