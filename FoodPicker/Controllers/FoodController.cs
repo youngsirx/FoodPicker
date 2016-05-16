@@ -30,6 +30,7 @@ namespace FoodPicker.Controllers
         {
 
             ViewBag.cat = new SelectList(db.Categories, "CategoryName");
+          
 
             if (id == null)
             {
@@ -184,36 +185,71 @@ namespace FoodPicker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int? id, string[] selectedCategory)
+        public ActionResult Edit([Bind(Include = "FoodID, Pirce, Description, Name")]Food food, string[] selectedCategory, HttpPostedFileBase ImageName)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
 
             var foodToUpdate = db.Foods
-                .Include(i => i.Categories)
-                .Where(i => i.FoodID == id).Single();
+               .Include(i => i.Categories)
+               .Where(i => i.FoodID == food.FoodID).Single();
 
-            if (TryUpdateModel(foodToUpdate, "",
-                new string[] { "Name", "Description", "Price" }))
+            if (ModelState.IsValid)
             {
-                try
+              if (TryUpdateModel(foodToUpdate, "",
+               new string[] { "Name", "Description", "Price" }))
                 {
-                    UpdateFoodCategory(selectedCategory, foodToUpdate);
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
+                    try
+                    {
+                        UpdateFoodCategory(selectedCategory, foodToUpdate);
+                        db.SaveChanges();
+                        return RedirectToAction("Index");
+                    }
+                    catch (Exception)
+                    {
+                        ModelState.AddModelError("", "Unable to save changes. Try again later!");
+                    }
                 }
-                catch (Exception)
+
+                if (ImageName != null && ImageName.ContentLength > 0)
                 {
-                    ModelState.AddModelError("", "Unable to save changes. Try again later!");
+                    var validImageTypes = new string[]
+                 {
+                        //"image/gif",
+                        "image/jpg",
+                        "image/jpeg"
+                     //,
+                     //"image/png"
+                 };
+                    if (!validImageTypes.Contains(ImageName.ContentType))
+                    {
+                        //file being uploaded is not a jpg -display error
+                        ModelState.AddModelError("", "Please use a JPG image only.");
+
+                        return View(food);
+                    }
+
+                    //retrieve the IDENTITY (new name for image) FROM sql sERVER
+                    string pictureName = food.FoodID.ToString();
+
+                    //next rename, scale an upload the image.
+                    RestoImageUpload imageUpload = new RestoImageUpload { Width = 300, Height = 200 };
+                    if (imageUpload.DeleteImage(food.ImageName))
+                    {
+                        ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
+                    }
+
                 }
+                db.Entry(food).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Details", new { id = food.FoodID });
             }
-            //Irregardless of the outcome (success or fail) we return the student model
-            //with edit view or Index view
+           
             PopulateAssignedCategories(foodToUpdate);
-            return View("Details", "Food", new {id = id });
+            return View(foodToUpdate);
         }
+
+
+
 
         private void UpdateFoodCategory(string[] selectedCategorey, Food foodToUpdate)
         {
