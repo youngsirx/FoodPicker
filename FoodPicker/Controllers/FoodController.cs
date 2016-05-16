@@ -97,7 +97,10 @@ namespace FoodPicker.Controllers
                         //file being uploaded is not a png -display error
                         ModelState.AddModelError("", "Please use a PNG image only.");
 
- 
+                        //jkhalack: we need to provide this list in a view bag to display a dropdown list for the restaurants
+                        ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
+                        //jkhalack: end view bag
+
                         return View(food);
                     }
 
@@ -123,6 +126,11 @@ namespace FoodPicker.Controllers
                 else
                 {
                     ModelState.AddModelError("", "You have not selected an image file to upload.");
+
+                    //jkhalack: we need to provide this list in a view bag to display a dropdown list for the restaurants
+                    ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
+                    //jkhalack: end view bag
+
                     return View(food);
                 }
                

@@ -48,7 +48,7 @@ namespace FoodPicker.Models
         [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string ThursdayHours { get; set; }
-        [Display(Name = "Friyday")]
+        [Display(Name = "Friday")]
         [DisplayFormat(NullDisplayText = "Closed")]
         [StringLength(15)]
         public string FridayHours { get; set; }
