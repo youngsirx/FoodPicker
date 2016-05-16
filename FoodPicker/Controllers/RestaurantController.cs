@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using FoodPicker.DAL;
 using FoodPicker.Models;
+using System.Threading.Tasks;
+using FoodPicker.Helpers;
 
 namespace FoodPicker.Controllers
 {
@@ -29,7 +31,8 @@ namespace FoodPicker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Restaurant restaurant = db.Restaurants.Find(id);
+            //Restaurant restaurant = db.Restaurants.Find(id);
+            var restaurant = db.Restaurants.Include(r => r.Foods).Where(r => r.RestaurantID == id).SingleOrDefault();
             if (restaurant == null)
             {
                 return HttpNotFound();
@@ -49,14 +52,68 @@ namespace FoodPicker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "RestaurantID,Name,StreetAddress,City,Province,PostalCode,Country,Phone,MondayHours,TuesdayHours,WednesdayHours,ThursdayHours,FridayHours,SaturdayHours,SundayHours,Url,Description,UserID")] Restaurant restaurant)
+        public async Task<ActionResult> Create([Bind(Include = "RestaurantID,Name,StreetAddress,City,Province,PostalCode,Country,Phone,MondayHours,TuesdayHours,WednesdayHours,ThursdayHours,FridayHours,SaturdayHours,SundayHours,Url,Description,UserID")] Restaurant restaurant, HttpPostedFileBase ImageName)
         {
+            //jkhalack: modified the food image upload method to be used for restaurant pictures
+            //jyoung: added image upload
+            //added HttpPostedFileBase ImageName args in method
+            //Also the form needs an enctype="multipart/form-data"
             if (ModelState.IsValid)
             {
-                db.Restaurants.Add(restaurant);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+
+                //check if you have anything to upload
+                if (ImageName != null && ImageName.ContentLength > 0)
+                {
+
+                    var validImageTypes = new string[]
+                   {
+                        //"image/gif",
+                        "image/jpg",
+                        "image/jpeg"
+                        //,
+                        //"image/png"
+                   };
+                    if (!validImageTypes.Contains(ImageName.ContentType))
+                    {
+                        //file being uploaded is not a jpg -display error
+                        ModelState.AddModelError("", "Please use a JPG image only.");
+                        ViewBag.UserID = new SelectList(db.Users, "UserID", "FullName", restaurant.UserID);
+
+                        return View(restaurant);
+                    }
+
+
+                    //save new restaurant to database
+                    db.Restaurants.Add(restaurant);
+                    await db.SaveChangesAsync();
+
+                    //retrieve the IDENTITY (new name for image) FROM sql sERVER
+                    string pictureName = restaurant.RestaurantID.ToString();
+
+
+                    //next rename, scale an upload the image.
+                    RestoImageUpload imageUpload = new RestoImageUpload { Width = 300, Height = 200 };
+                    ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
+
+                    //ViewBag.UserID = new SelectList(db.Users, "UserID", "FullName", restaurant.UserID);
+
+                    return RedirectToAction("Details", new { id = restaurant.RestaurantID });
+                }
+                else
+                {
+                    ModelState.AddModelError("", "You have not selected an image file to upload.");
+                    ViewBag.UserID = new SelectList(db.Users, "UserID", "FullName", restaurant.UserID);
+
+                    return View(restaurant);
+                }
+
+
+
+
+                //db.Restaurants.Add(restaurant);
+                //db.SaveChanges();
+                //return RedirectToAction("Index");
+            }//end ModelState
 
             ViewBag.UserID = new SelectList(db.Users, "UserID", "FullName", restaurant.UserID);
             return View(restaurant);
@@ -83,13 +140,45 @@ namespace FoodPicker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "RestaurantID,Name,StreetAddress,City,Province,PostalCode,Country,Phone,MondayHours,TuesdayHours,WednesdayHours,ThursdayHours,FridayHours,SaturdayHours,SundayHours,Description,Url,UserID")] Restaurant restaurant)
+        public ActionResult Edit([Bind(Include = "RestaurantID,Name,StreetAddress,City,Province,PostalCode,Country,Phone,MondayHours,TuesdayHours,WednesdayHours,ThursdayHours,FridayHours,SaturdayHours,SundayHours,Description,Url,UserID")] Restaurant restaurant, HttpPostedFileBase ImageName)
         {
             if (ModelState.IsValid)
             {
+                if (ImageName != null && ImageName.ContentLength > 0)
+                {
+                    var validImageTypes = new string[]
+                 {
+                        //"image/gif",
+                        "image/jpg",
+                        "image/jpeg"
+                     //,
+                     //"image/png"
+                 };
+                    if (!validImageTypes.Contains(ImageName.ContentType))
+                    {
+                        //file being uploaded is not a jpg -display error
+                        ModelState.AddModelError("", "Please use a JPG image only.");
+                        
+                        return View(restaurant);
+                    }
+
+                    //retrieve the IDENTITY (new name for image) FROM sql sERVER
+                    string pictureName = restaurant.RestaurantID.ToString();
+
+
+                    //next rename, scale an upload the image.
+                    RestoImageUpload imageUpload = new RestoImageUpload { Width = 300, Height = 200 };
+                    if(imageUpload.DeleteImage(restaurant.ImageName))
+                    {
+                        ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
+                    }
+                    
+
+
+                }
                 db.Entry(restaurant).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details",new { id = restaurant.RestaurantID });
             }
             ViewBag.UserID = new SelectList(db.Users, "UserID", "FirstName", restaurant.UserID);
             return View(restaurant);

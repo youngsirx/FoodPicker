@@ -31,3 +31,9 @@ textarea {
 .custom-input-search{
     width: 500em;
 }
+
+/*jkhalack: table for restaurant hours*/
+.table-hours > tbody > tr > td{
+    padding-bottom: 0.15em;
+    padding-top:0.15em;
+}

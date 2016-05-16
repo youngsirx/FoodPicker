@@ -96,6 +96,8 @@ namespace FoodPicker.Controllers
                     {
                         //file being uploaded is not a png -display error
                         ModelState.AddModelError("", "Please use a PNG image only.");
+
+ 
                         return View(food);
                     }
 
@@ -109,7 +111,7 @@ namespace FoodPicker.Controllers
                     string pictureName = food.FoodID.ToString();
 
                     //next rename, scale an upload the image.
-                    ImageUpload imageUpload = new ImageUpload { Width = 200, Height = 275 };
+                    ImageUpload imageUpload = new ImageUpload { Width = 300, Height = 200 };
                     ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
 
                     food.ImageName = pictureName + ".png";
