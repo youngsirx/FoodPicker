@@ -6,8 +6,8 @@
 
 <h2>Edit</h2>
 <div class="row">
-
-    @using (Html.BeginForm())
+ 
+    @using (Html.BeginForm("Edit", "Restaurant", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
@@ -152,6 +152,21 @@
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.SundayHours, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.SundayHours, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <hr />
+            <h4>Restaurant logo</h4>
+            <div class="col-md-4">
+                <img src="../../RestoImages/@Model.ImageName" class="img img-responsive img-rounded" />
+            </div>
+
+            @* Image upload form *@
+            <div class="form-group">
+                @*<label class="control-label col-md-2" for="ImageName">Image</label>*@
+                <div class="col-md-10">
+                    <input type="file" id="ImageName"
+                           name="ImageName" accept="image/*.jpg" class="form-control" />
                 </div>
             </div>
 

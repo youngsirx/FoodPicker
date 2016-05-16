@@ -67,10 +67,11 @@ namespace FoodPicker.Controllers
 
                     var validImageTypes = new string[]
                    {
-                        "image/gif",
+                        //"image/gif",
                         "image/jpg",
-                        "image/jpeg",
-                        "image/png"
+                        "image/jpeg"
+                        //,
+                        //"image/png"
                    };
                     if (!validImageTypes.Contains(ImageName.ContentType))
                     {
@@ -91,7 +92,7 @@ namespace FoodPicker.Controllers
 
 
                     //next rename, scale an upload the image.
-                    RestoImageUpload imageUpload = new RestoImageUpload { Width = 200, Height = 200 };
+                    RestoImageUpload imageUpload = new RestoImageUpload { Width = 300, Height = 200 };
                     ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
 
                     //ViewBag.UserID = new SelectList(db.Users, "UserID", "FullName", restaurant.UserID);
@@ -139,13 +140,45 @@ namespace FoodPicker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "RestaurantID,Name,StreetAddress,City,Province,PostalCode,Country,Phone,MondayHours,TuesdayHours,WednesdayHours,ThursdayHours,FridayHours,SaturdayHours,SundayHours,Description,Url,UserID")] Restaurant restaurant)
+        public ActionResult Edit([Bind(Include = "RestaurantID,Name,StreetAddress,City,Province,PostalCode,Country,Phone,MondayHours,TuesdayHours,WednesdayHours,ThursdayHours,FridayHours,SaturdayHours,SundayHours,Description,Url,UserID")] Restaurant restaurant, HttpPostedFileBase ImageName)
         {
             if (ModelState.IsValid)
             {
+                if (ImageName != null && ImageName.ContentLength > 0)
+                {
+                    var validImageTypes = new string[]
+                 {
+                        //"image/gif",
+                        "image/jpg",
+                        "image/jpeg"
+                     //,
+                     //"image/png"
+                 };
+                    if (!validImageTypes.Contains(ImageName.ContentType))
+                    {
+                        //file being uploaded is not a jpg -display error
+                        ModelState.AddModelError("", "Please use a JPG image only.");
+                        
+                        return View(restaurant);
+                    }
+
+                    //retrieve the IDENTITY (new name for image) FROM sql sERVER
+                    string pictureName = restaurant.RestaurantID.ToString();
+
+
+                    //next rename, scale an upload the image.
+                    RestoImageUpload imageUpload = new RestoImageUpload { Width = 300, Height = 200 };
+                    if(imageUpload.DeleteImage(restaurant.ImageName))
+                    {
+                        ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
+                    }
+                    
+
+
+                }
                 db.Entry(restaurant).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details",new { id = restaurant.RestaurantID });
             }
             ViewBag.UserID = new SelectList(db.Users, "UserID", "FirstName", restaurant.UserID);
             return View(restaurant);
