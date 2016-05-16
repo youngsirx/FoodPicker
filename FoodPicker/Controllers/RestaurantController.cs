@@ -89,8 +89,7 @@ namespace FoodPicker.Controllers
 
                     //retrieve the IDENTITY (new name for image) FROM sql sERVER
                     string pictureName = restaurant.RestaurantID.ToString();
-
-
+                    
                     //next rename, scale an upload the image.
                     RestoImageUpload imageUpload = new RestoImageUpload { Width = 300, Height = 200 };
                     ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);

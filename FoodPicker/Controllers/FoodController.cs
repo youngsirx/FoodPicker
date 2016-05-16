@@ -30,7 +30,7 @@ namespace FoodPicker.Controllers
         {
 
             ViewBag.cat = new SelectList(db.Categories, "CategoryName");
-          
+
 
             if (id == null)
             {
@@ -48,7 +48,7 @@ namespace FoodPicker.Controllers
         // GET: Food/Create
         public ActionResult Create()
         {
-             ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name");
+            ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name");
 
             var food = new Food();
             food.Categories = new List<Category>();
@@ -66,10 +66,10 @@ namespace FoodPicker.Controllers
         public async Task<ActionResult> Create([Bind(Include = "FoodID,Name,Description,RestaurantID,Price")] Food food, HttpPostedFileBase ImageName, string[] selectedCategory)
         {
 
-            if(selectedCategory != null)
+            if (selectedCategory != null)
             {
                 food.Categories = new List<Category>();
-                foreach(var cat in selectedCategory)
+                foreach (var cat in selectedCategory)
                 {
                     var categoryToAdd = db.Categories.Find(int.Parse(cat));
                     food.Categories.Add(categoryToAdd);
@@ -81,11 +81,11 @@ namespace FoodPicker.Controllers
             //Also the form needs an enctype="multipart/form-data"
             if (ModelState.IsValid)
             {
-                               
+
                 //check if you have anything to upload
                 if (ImageName != null && ImageName.ContentLength > 0)
                 {
-                    
+
                     var validImageTypes = new string[]
                    {
                         //"image/gif",
@@ -106,7 +106,7 @@ namespace FoodPicker.Controllers
                     }
 
                     food.DateAdded = DateTime.Today;
-               
+
                     //save new food to database
                     db.Foods.Add(food);
                     await db.SaveChangesAsync();
@@ -122,7 +122,7 @@ namespace FoodPicker.Controllers
                     db.Entry(food).State = EntityState.Modified;
                     await db.SaveChangesAsync();
 
-                    return RedirectToAction("Details", new { id = food.FoodID});
+                    return RedirectToAction("Details", new { id = food.FoodID });
                 }
                 else
                 {
@@ -134,12 +134,12 @@ namespace FoodPicker.Controllers
 
                     return View(food);
                 }
-               
+
             }//end of modelstate
             ViewBag.ResturantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
 
             PopulateAssignedCategories(food);
-            
+
             return View(food);
         }
 
@@ -153,7 +153,7 @@ namespace FoodPicker.Controllers
             var viewModel = new List<CategoryData>();
 
             foreach (var category in allCategories)
-            { 
+            {
                 viewModel.Add(new CategoryData
                 {
                     CategoryID = category.CategoryID,
@@ -203,14 +203,14 @@ namespace FoodPicker.Controllers
 
             if (ModelState.IsValid)
             {
-              if (TryUpdateModel(foodToUpdate, "",
-               new string[] { "Name", "Description", "Price" }))
+                if (TryUpdateModel(foodToUpdate, "",
+                 new string[] { "Name", "Description", "Price" }))
                 {
                     try
                     {
                         UpdateFoodCategory(selectedCategory, foodToUpdate);
                         db.SaveChanges();
-                        return RedirectToAction("Index");
+                        
                     }
                     catch (Exception)
                     {
@@ -223,15 +223,15 @@ namespace FoodPicker.Controllers
                     var validImageTypes = new string[]
                  {
                         //"image/gif",
-                        "image/jpg",
-                        "image/jpeg"
-                     //,
-                     //"image/png"
+                       //, "image/jpg",
+                        //,"image/jpeg"
+                     
+                     "image/png"
                  };
                     if (!validImageTypes.Contains(ImageName.ContentType))
                     {
                         //file being uploaded is not a jpg -display error
-                        ModelState.AddModelError("", "Please use a JPG image only.");
+                        ModelState.AddModelError("", "Please use a PNG image only.");
 
                         return View(food);
                     }
@@ -240,18 +240,19 @@ namespace FoodPicker.Controllers
                     string pictureName = food.FoodID.ToString();
 
                     //next rename, scale an upload the image.
-                    RestoImageUpload imageUpload = new RestoImageUpload { Width = 300, Height = 200 };
-                    if (imageUpload.DeleteImage(food.ImageName))
-                    {
-                        ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
-                    }
+                    ImageUpload imageUpload = new ImageUpload { Width = 300, Height = 200 };
+                    ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
+
+                    food.ImageName = pictureName + ".png";
+                   // db.Entry(food).State = EntityState.Modified;
+                    db.SaveChanges();
+
 
                 }
-                db.Entry(food).State = EntityState.Modified;
-                db.SaveChanges();
+               
                 return RedirectToAction("Details", new { id = food.FoodID });
             }
-           
+
             PopulateAssignedCategories(foodToUpdate);
             return View(foodToUpdate);
         }
@@ -261,7 +262,7 @@ namespace FoodPicker.Controllers
 
         private void UpdateFoodCategory(string[] selectedCategorey, Food foodToUpdate)
         {
-            if(selectedCategorey ==null)
+            if (selectedCategorey == null)
             {
                 foodToUpdate.Categories = new List<Category>();
                 return;
@@ -318,12 +319,12 @@ namespace FoodPicker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            
+
 
             Food food = db.Foods.Find(id);
 
             string image = food.ImageName.ToString();
-           
+
 
             db.Foods.Remove(food);
             db.SaveChanges();

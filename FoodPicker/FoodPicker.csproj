@@ -236,7 +236,7 @@
     <Content Include="RestoImages\5.jpg" />
     <Content Include="RestoImages\6.jpg" />
     <Content Include="RestoImages\7.jpg" />
-    <Content Include="RestoImages\8.jpg" />
+    <Content Include="RestoImages\1.jpg" />
     <Content Include="Scripts\bootstrap-rating\bootstrap-rating.js" />
     <Content Include="Scripts\bootstrap-rating\bootstrap-rating.min.js" />
     <Content Include="Scripts\bootstrap.js" />

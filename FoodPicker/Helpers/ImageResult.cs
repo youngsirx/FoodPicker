@@ -11,4 +11,7 @@ namespace FoodPicker.Helpers
         public string ImageName { get; set; }
         public string ErrorMessage { get; set; }
     }
+
+   
+
 }

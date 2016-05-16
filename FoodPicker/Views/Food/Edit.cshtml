@@ -7,13 +7,13 @@
 <h2>Edit</h2>
 
 <div class="row">
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Edit", "Food", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
         <div class="form-horizontal col-md-8">
             <h4>Food</h4>
-            
+
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.FoodID)
 
@@ -35,12 +35,12 @@
 
             @* Upload a new photo *@
             @*<div class="form-group">
-                <label class="control-label col-md-2" for="ImageName">Upload A New Photo</label>
-                <div class="col-md-10">
-                    <input type="file" id="ImageName"
-                           name="ImageName" accept="image/*" class="form-control" />
-                </div>
-            </div>*@
+                    <label class="control-label col-md-2" for="ImageName">Upload A New Photo</label>
+                    <div class="col-md-10">
+                        <input type="file" id="ImageName"
+                               name="ImageName" accept="image/*" class="form-control" />
+                    </div>
+                </div>*@
 
 
 
@@ -106,48 +106,50 @@
                 </div>
             </div>
         </div>
-    }
+    
 
     <div class="col-md-4">
 
 
         <div class="form-group">
             <div class="caption"><h2>Pick some categories!</h2></div>
-                <table class="table table-condensed">
+            <table class="table table-condensed">
 
-                    @{
-    int cnt = 0;
-    List<FoodPicker.ViewModels.CategoryData> categories = ViewBag.Catagories;
+                @{
+                    int cnt = 0;
+                    List<FoodPicker.ViewModels.CategoryData> categories = ViewBag.Catagories;
 
-    foreach (var category in categories)
-    {
-                @* mwilliams: Using @: to explicitly indicate the start of content
-                    in this case it will add a space
-                    http://weblogs.asp.net/scottgu/asp-net-mvc-3-razor-s-and-lt-text-gt-syntax
-                *@
-                    if (cnt++ % 3 == 0)
+                    foreach (var category in categories)
                     {
-                        @:<tr>
+                        @* mwilliams: Using @: to explicitly indicate the start of content
+                            in this case it will add a space
+                            http://weblogs.asp.net/scottgu/asp-net-mvc-3-razor-s-and-lt-text-gt-syntax
+                        *@
+                if (cnt++ % 3 == 0)
+                {
+                    @:<tr>
                             }
-                            @:<td style="border:none">
-                                <input type="checkbox"
-                                       name="selectedCategory"
-                                       value="@category.CategoryID"
-                                       @(Html.Raw(category.Assigned ? "checked=\"checked\"" : "")) />
-                                @category.CategoryID @:  @category.CategoryName
-                                @:</td>
+                @:<td style="border:none">
+                    <input type="checkbox"
+                           name="selectedCategory"
+                           value="@category.CategoryID"
+                           @(Html.Raw(category.Assigned ? "checked=\"checked\"" : "")) />
+                                    @category.CategoryID @:  @category.CategoryName
+                                    @:</td>
                             }
-                            @:</tr>
+                    @:</tr>
 
 
+
+
+                }
+            </table>
+
+        </div>
+    </div>
                     }
-        </table>
-   
 </div>
-</div>
-
-</div>
-
+                    
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
