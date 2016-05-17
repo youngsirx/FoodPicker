@@ -137,51 +137,101 @@ namespace FoodPicker.Controllers
         // POST: Restaurant/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "RestaurantID,Name,StreetAddress,City,Province,PostalCode,Country,Phone,MondayHours,TuesdayHours,WednesdayHours,ThursdayHours,FridayHours,SaturdayHours,SundayHours,Description,Url,UserID")] Restaurant restaurant, HttpPostedFileBase ImageName)
+        public ActionResult EditPost(int? id, HttpPostedFileBase ImageName)
         {
-            if (ModelState.IsValid)
+            //[Bind(Include = "RestaurantID,Name,StreetAddress,City,Province,
+            //PostalCode,Country,Phone,
+            //MondayHours,TuesdayHours,WednesdayHours,ThursdayHours,FridayHours,SaturdayHours,SundayHours,
+            //Description,Url,UserID")]
+            if (id == null)
             {
-                if (ImageName != null && ImageName.ContentLength > 0)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Restaurant restaurantToUpdate = db.Restaurants.Find(id);
+            if (TryUpdateModel(restaurantToUpdate, "",
+               new string[] { "Name", "StreetAddress", "City", "Province", "PostalCode", "Country", "Phone",
+               "MondayHours", "TuesdayHours", "WednesdayHours", "ThursdayHours", "FridayHours",
+                   "SaturdayHours", "SundayHours", "Description", "Url", "UserID"}))
+            {
+                try
                 {
-                    var validImageTypes = new string[]
-                 {
+                    db.SaveChanges();
+                    if (ImageName != null && ImageName.ContentLength > 0)
+                    {
+                        var validImageTypes = new string[]
+                     {
                         //"image/gif",
                         "image/jpg",
                         "image/jpeg"
-                     //,
-                     //"image/png"
-                 };
-                    if (!validImageTypes.Contains(ImageName.ContentType))
-                    {
-                        //file being uploaded is not a jpg -display error
-                        ModelState.AddModelError("", "Please use a JPG image only.");
-                        
-                        return View(restaurant);
+                         //,
+                         //"image/png"
+                     };
+                        if (!validImageTypes.Contains(ImageName.ContentType))
+                        {
+                            //file being uploaded is not a jpg -display error
+                            ModelState.AddModelError("", "Please use a JPG image only.");
+                            return View(restaurantToUpdate);
+                        }
+                        //retrieve the IDENTITY (new name for image) FROM sql sERVER
+                        string pictureName = id.ToString();
+                        //next rename, scale an upload the image.
+                        RestoImageUpload imageUpload = new RestoImageUpload { Width = 300, Height = 200 };
+                        if (imageUpload.DeleteImage(restaurantToUpdate.ImageName))
+                        {
+                            ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
+                        }
                     }
-
-                    //retrieve the IDENTITY (new name for image) FROM sql sERVER
-                    string pictureName = restaurant.RestaurantID.ToString();
-
-
-                    //next rename, scale an upload the image.
-                    RestoImageUpload imageUpload = new RestoImageUpload { Width = 300, Height = 200 };
-                    if(imageUpload.DeleteImage(restaurant.ImageName))
-                    {
-                        ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
-                    }
-                    
-
-
+                    return RedirectToAction("Details", new { id = restaurantToUpdate.RestaurantID });
                 }
-                db.Entry(restaurant).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Details",new { id = restaurant.RestaurantID });
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", "Unable to save changes. Try again later!");
+                }
             }
-            ViewBag.UserID = new SelectList(db.Users, "UserID", "FirstName", restaurant.UserID);
-            return View(restaurant);
+            return View(restaurantToUpdate);
+
         }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit([Bind(Include = "RestaurantID,Name,StreetAddress,City,Province,PostalCode,Country,Phone,MondayHours,TuesdayHours,WednesdayHours,ThursdayHours,FridayHours,SaturdayHours,SundayHours,Description,Url,UserID")] Restaurant restaurant, HttpPostedFileBase ImageName)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (ImageName != null && ImageName.ContentLength > 0)
+        //        {
+        //            var validImageTypes = new string[]
+        //         {
+        //                //"image/gif",
+        //                "image/jpg",
+        //                "image/jpeg"
+        //             //,
+        //             //"image/png"
+        //         };
+        //            if (!validImageTypes.Contains(ImageName.ContentType))
+        //            {
+        //                //file being uploaded is not a jpg -display error
+        //                ModelState.AddModelError("", "Please use a JPG image only.");                        
+        //                return View(restaurant);
+        //            }
+        //            //retrieve the IDENTITY (new name for image) FROM sql sERVER
+        //            string pictureName = restaurant.RestaurantID.ToString();
+        //            //next rename, scale an upload the image.
+        //            RestoImageUpload imageUpload = new RestoImageUpload { Width = 300, Height = 200 };
+        //            if(imageUpload.DeleteImage(restaurant.ImageName))
+        //            {
+        //                ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
+        //            }
+        //        }
+        //        db.Entry(restaurant).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("Details",new { id = restaurant.RestaurantID });
+        //    }
+        //    ViewBag.UserID = new SelectList(db.Users, "UserID", "FirstName", restaurant.UserID);
+        //    return View(restaurant);
+        //}
 
         // GET: Restaurant/Delete/5
         public ActionResult Delete(int? id)
