@@ -15,5 +15,15 @@ namespace FoodPicker.Models
         public string CategoryName { get; set; }
 
         public virtual ICollection<Food> Foods { get; set; }
+
+        [Display(Name = "Category")]
+        public string CatName
+        {
+            get
+            {
+                return CategoryName + ", ";
+            }
+        }
+
     }
 }

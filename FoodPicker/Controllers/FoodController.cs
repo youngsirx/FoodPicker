@@ -29,7 +29,7 @@ namespace FoodPicker.Controllers
         public ActionResult Details(int? id)
         {
 
-            ViewBag.cat = new SelectList(db.Categories, "CategoryName");
+            
 
 
             if (id == null)
@@ -330,6 +330,14 @@ namespace FoodPicker.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+        
+        public ActionResult Favorite(int? id)
+        {
+            return View();
+        }
+
+
 
         protected override void Dispose(bool disposing)
         {

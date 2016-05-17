@@ -29,9 +29,11 @@
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("Resturants", "Index", "Restaurant")</li>
                             <li>@Html.ActionLink("Foods", "Index", "Food")</li>
+
                         </ul>
-                        </li>
-                    </ul>
+                    </li>
+                    <li>@Html.ActionLink("Favorites", "Favorite", "Food")</li>
+                </ul>
                         <form class="navbar-form navbar-left" role="search">
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Search">

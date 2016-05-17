@@ -56,7 +56,8 @@
             </dt>
 
             <dd>
-             
+               
+
             </dd>
 
             <dt>
@@ -75,8 +76,15 @@
                 }
 
             </dd>
-
-
+            <br />
+            @if (User.IsInRole("basicuser"))
+            {
+            <div class="form-group">
+                <div class="col-md-offset-4">
+                    <input type="submit" value="Favorite" class="btn btn-default" />
+                </div>
+            </div>
+            Ç
 
         </dl>
     </div>
