@@ -32,7 +32,12 @@
 
                         </ul>
                     </li>
-                    <li>@Html.ActionLink("Favorites", "Favorite", "Food")</li>
+                    @Html.Partial("_FoodMenuPartial")
+                    @if (User.IsInRole("basicuser") || User.IsInRole("owner"))
+                    {
+                        <li>@Html.ActionLink("Favorites", "Favorite", "Food")</li>
+                    }
+
                 </ul>
                         <form class="navbar-form navbar-left" role="search">
                             <div class="form-group">

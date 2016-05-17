@@ -1,14 +1,15 @@
 ﻿@model IEnumerable<FoodPicker.Models.Food>
 
+
 @{
-    ViewBag.Title = "Favorite";
+    ViewBag.Title = "FoodsByCategory";
+    
+
 }
 
-<h2>Favorite</h2>
+<h2>@ViewBag.name</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+
 <table class="table">
     <tr>
         <th>
@@ -17,17 +18,18 @@
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
-       
-       
+        <th>
+
+        </th>
+        
         <th>
             @Html.DisplayNameFor(model => model.Price)
         </th>
-        
-        
+       
         <th></th>
     </tr>
 
-@*@foreach (var item in Model) {
+@foreach (var item in Model) {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Restaurant.Name)
@@ -35,19 +37,20 @@
         <td>
             @Html.DisplayFor(modelItem => item.Name)
         </td>
+        <th>
+            @*<img src="~/FoodImages/@item.ImageName" alt="@item.ImageName" />*@
+        </th>
         
-       
         <td>
             @Html.DisplayFor(modelItem => item.Price)
         </td>
        
-      
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.FoodID }) |
             @Html.ActionLink("Details", "Details", new { id=item.FoodID }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.FoodID })
         </td>
     </tr>
-}*@
+}
 
 </table>

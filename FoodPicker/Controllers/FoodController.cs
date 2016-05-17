@@ -11,6 +11,8 @@ using FoodPicker.Models;
 using System.Threading.Tasks;
 using FoodPicker.Helpers;
 using FoodPicker.ViewModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace FoodPicker.Controllers
 {
@@ -28,8 +30,16 @@ namespace FoodPicker.Controllers
         // GET: Food/Details/5
         public ActionResult Details(int? id)
         {
+            //var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext.Create()));
+            //var currentUser = manager.FindById(User.Identity.GetUserId());
+            //var viewModel = new FavoriteData();
+            //viewModel.Users = db.Users.Include(i => i.Foods).Where(i => i.Email == currentUser.Email);
 
-            
+            //var user = viewModel.Users.Where(i => i.Email == currentUser.Email).Single();
+
+            //viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
+
+
 
 
             if (id == null)
@@ -334,9 +344,30 @@ namespace FoodPicker.Controllers
         
         public ActionResult Favorite(int? id)
         {
-            return View();
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext.Create()));
+            var currentUser = manager.FindById(User.Identity.GetUserId());
+            var viewModel = new FavoriteData();
+            viewModel.Users = db.Users.Include(i => i.Foods).Where(i => i.Email == currentUser.Email);
+
+            var user = viewModel.Users.Where(i => i.Email == currentUser.Email).Single();
+
+            viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
+
+           
+
+            return View(viewModel);
         }
 
+
+        public ActionResult FoodsByCategory(string name)
+        {
+            Category category = db.Categories.Where(i => i.CategoryName == name).Single();
+            var foods = db.Foods.Where(i => i.FoodID == category.CategoryID);
+
+            ViewBag.name = name;
+
+            return View(foods.ToList());
+        }
 
 
         protected override void Dispose(bool disposing)

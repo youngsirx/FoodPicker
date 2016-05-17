@@ -310,6 +310,8 @@
     <Content Include="Views\Account\ResendEmail.cshtml" />
     <Content Include="Views\Account\DisplayEmail.cshtml" />
     <Content Include="Views\Food\Favorite.cshtml" />
+    <Content Include="Views\Shared\_FoodMenuPartial.cshtml" />
+    <Content Include="Views\Food\FoodsByCategory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,23 @@
+﻿
+
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Categories <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+
+        @{
+
+            IEnumerable<FoodPicker.Models.Category> categories = new FoodPicker.DAL.FoodContext().Categories;
+
+
+            foreach (var item in categories)
+            {
+
+
+                <li>@Html.ActionLink(item.CategoryName, "FoodsByCategory", "Food", new { name = item.CategoryName }, null)</li>
+
+            }
+
+        }
+    </ul>
+
+</li>
