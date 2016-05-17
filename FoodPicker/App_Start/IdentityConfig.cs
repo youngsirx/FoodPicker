@@ -32,7 +32,6 @@ namespace FoodPicker
 
 
 
-
             //configure the client
             System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("smtp.gmail.com");
             client.Port = 587;

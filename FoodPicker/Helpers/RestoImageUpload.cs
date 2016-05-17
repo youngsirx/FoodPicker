@@ -41,7 +41,7 @@ namespace FoodPicker.Helpers
             }
             else
             {
-                return false;
+                return true;
             }
         }
 
@@ -237,7 +237,7 @@ namespace FoodPicker.Helpers
                              imgPhoto.VerticalResolution);
 
             Graphics grPhoto = Graphics.FromImage(bmPhoto);
-            grPhoto.Clear(Color.White);
+            grPhoto.Clear(Color.Gray);
             grPhoto.InterpolationMode =
                     InterpolationMode.HighQualityBicubic;
 

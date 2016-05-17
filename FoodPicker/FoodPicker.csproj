@@ -308,6 +308,7 @@
     <Content Include="Views\Manage\UserInfo.cshtml" />
     <Content Include="Views\Account\ResendEmail.cshtml" />
     <Content Include="Views\Account\DisplayEmail.cshtml" />
+    <Content Include="Views\Shared\_AdminPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
