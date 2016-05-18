@@ -35,10 +35,7 @@
                         </ul>
                     </li>
                     @Html.Partial("_FoodMenuPartial")
-                    @if (User.IsInRole("basicuser") || User.IsInRole("owner"))
-                    {
-                        <li>@Html.ActionLink("Favorites", "Favorite", "Food")</li>
-                    }
+                   
 
                 </ul>
 

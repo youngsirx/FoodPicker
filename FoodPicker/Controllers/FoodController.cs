@@ -39,8 +39,12 @@ namespace FoodPicker.Controllers
 
             //viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
 
+            
 
 
+
+
+            
 
             if (id == null)
             {
