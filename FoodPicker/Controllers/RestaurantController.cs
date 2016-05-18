@@ -71,11 +71,10 @@ namespace FoodPicker.Controllers
 
                     var validImageTypes = new string[]
                    {
-                        //"image/gif",
+                        "image/gif",
                         "image/jpg",
-                        "image/jpeg"
-                        //,
-                        //"image/png"
+                        "image/jpeg",
+                        "image/png"
                    };
                     if (!validImageTypes.Contains(ImageName.ContentType))
                     {
@@ -123,6 +122,7 @@ namespace FoodPicker.Controllers
         }
 
         // GET: Restaurant/Edit/5
+        [Authorize(Roles = "owner, admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -142,6 +142,7 @@ namespace FoodPicker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
+        [Authorize(Roles = "owner, admin")]
         [ValidateAntiForgeryToken]
         public ActionResult EditPost(int? id, HttpPostedFileBase ImageName)
         {
@@ -155,6 +156,12 @@ namespace FoodPicker.Controllers
             }
 
             Restaurant restaurantToUpdate = db.Restaurants.Find(id);
+            
+            if (!User.IsInRole("admin")&& 
+                !(User.IsInRole("owner") && currentUserID() != restaurantToUpdate.UserID)
+                )
+            { return View("NotYourRestaurants"); }
+
             if (TryUpdateModel(restaurantToUpdate, "",
                new string[] { "Name", "StreetAddress", "City", "Province", "PostalCode", "Country", "Phone",
                "MondayHours", "TuesdayHours", "WednesdayHours", "ThursdayHours", "FridayHours",
@@ -167,11 +174,10 @@ namespace FoodPicker.Controllers
                     {
                         var validImageTypes = new string[]
                      {
-                        //"image/gif",
+                        "image/gif",
                         "image/jpg",
-                        "image/jpeg"
-                         //,
-                         //"image/png"
+                        "image/jpeg",
+                         "image/png"
                      };
                         if (!validImageTypes.Contains(ImageName.ContentType))
                         {
@@ -295,6 +301,23 @@ namespace FoodPicker.Controllers
                 return HttpNotFound();
             }
                 
+        }
+        private int? currentUserID()
+        {
+            string userId = User.Identity.GetUserId();
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var manager = new UserManager<ApplicationUser>(
+                   new UserStore<ApplicationUser>(ApplicationDbContext.Create())
+                   );
+                var currentUser = manager.FindByEmail(User.Identity.GetUserName());
+                //get the restaurant entity for this logged in user
+                User user = db.Users.Where(i => i.Email == currentUser.Email).SingleOrDefault();
+                if ( user != null ) {
+                    return user.UserID;
+                }
+            }
+             return null;
         }
 
         protected override void Dispose(bool disposing)

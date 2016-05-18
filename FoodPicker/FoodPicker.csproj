@@ -176,6 +176,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RestaurantController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DAL\FoodContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -229,7 +230,30 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="FoodImages\1.jpg" />
+    <Content Include="FoodImages\12.png" />
+    <Content Include="FoodImages\13.png" />
+    <Content Include="FoodImages\14.png" />
+    <Content Include="FoodImages\16.png" />
+    <Content Include="FoodImages\17.png" />
+    <Content Include="FoodImages\18.png" />
+    <Content Include="FoodImages\19.png" />
     <Content Include="FoodImages\2.jpg" />
+    <Content Include="FoodImages\20.png" />
+    <Content Include="FoodImages\21.png" />
+    <Content Include="FoodImages\27.png" />
+    <Content Include="FoodImages\28.png" />
+    <Content Include="FoodImages\29.png" />
+    <Content Include="FoodImages\30.png" />
+    <Content Include="FoodImages\6.jpg" />
+    <Content Include="FoodImages\6.png" />
+    <Content Include="FoodImages\cherry_bowl.jpg" />
+    <Content Include="FoodImages\cherry_bowl.png" />
+    <Content Include="FoodImages\peach.jpg" />
+    <Content Include="FoodImages\sprinkles.jpg" />
+    <Content Include="FoodImages\strawberry.jpg" />
+    <Content Include="FoodImages\strawberry.png" />
+    <Content Include="FoodImages\tea400.png" />
+    <Content Include="FoodImages\varenyky.png" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="RestoImages\2.jpg" />
@@ -314,6 +338,12 @@
     <Content Include="Views\Food\FoodsByCategory.cshtml" />
     <Content Include="Views\Food\NoRestaurant.cshtml" />
     <Content Include="Views\Shared\_AdminPartial.cshtml" />
+    <Content Include="Views\Restaurant\NotYourRestaurant.cshtml" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
