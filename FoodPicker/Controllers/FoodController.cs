@@ -110,6 +110,7 @@ namespace FoodPicker.Controllers
 
                         //jkhalack: we need to provide this list in a view bag to display a dropdown list for the restaurants
                         ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
+                        PopulateAssignedCategories(food);
                         //jkhalack: end view bag
 
                         return View(food);
@@ -140,6 +141,7 @@ namespace FoodPicker.Controllers
 
                     //jkhalack: we need to provide this list in a view bag to display a dropdown list for the restaurants
                     ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
+                    PopulateAssignedCategories(food);
                     //jkhalack: end view bag
 
                     return View(food);
@@ -157,8 +159,17 @@ namespace FoodPicker.Controllers
         private void PopulateAssignedCategories(Food food)
         {
             var allCategories = db.Categories;
+            HashSet<int> foodCategories;
+            if (food.Categories !=null)
+            {
+                foodCategories = new HashSet<int>(food.Categories.Select(c => c.CategoryID));
+            }
+            else
+            {
+                foodCategories = new HashSet<int>();
+            }
 
-            var foodCategories = new HashSet<int>(food.Categories.Select(c => c.CategoryID));
+            
 
             var viewModel = new List<CategoryData>();
 
@@ -242,6 +253,11 @@ namespace FoodPicker.Controllers
                     {
                         //file being uploaded is not a jpg -display error
                         ModelState.AddModelError("", "Please use a PNG image only.");
+
+                        //jkhalack: populate ViewBag to retry the edit
+                        PopulateAssignedCategories(food);
+                        ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
+                        //jkhalack: end populate ViewBag to retry the edit
 
                         return View(food);
                     }

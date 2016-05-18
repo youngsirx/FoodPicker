@@ -10,6 +10,8 @@ using FoodPicker.DAL;
 using FoodPicker.Models;
 using System.Threading.Tasks;
 using FoodPicker.Helpers;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace FoodPicker.Controllers
 {
@@ -41,6 +43,7 @@ namespace FoodPicker.Controllers
         }
 
         // GET: Restaurant/Create
+        [Authorize(Roles = "owner, admin")]
         public ActionResult Create()
         {
             ViewBag.UserID = new SelectList(db.Users, "UserID", "FullName");
@@ -51,6 +54,7 @@ namespace FoodPicker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "owner, admin")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "RestaurantID,Name,StreetAddress,City,Province,PostalCode,Country,Phone,MondayHours,TuesdayHours,WednesdayHours,ThursdayHours,FridayHours,SaturdayHours,SundayHours,Url,Description,UserID")] Restaurant restaurant, HttpPostedFileBase ImageName)
         {
@@ -257,6 +261,40 @@ namespace FoodPicker.Controllers
             db.Restaurants.Remove(restaurant);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        //jkhalack: management view for restaurant owner
+        [Authorize(Roles ="owner")]
+        public ActionResult MyRestaurant()
+        {
+            //find the owner that is currently logged in
+            string userId = User.Identity.GetUserId();
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var manager = new UserManager<ApplicationUser>(
+                    new UserStore<ApplicationUser>(ApplicationDbContext.Create())
+                    );
+                var currentUser = manager.FindByEmail(User.Identity.GetUserName());
+                //get the restaurant entity for this logged in user
+                User owner = db.Users.Where(i => i.Email == currentUser.Email).Single();
+                Restaurant restaurant = db.Restaurants
+                    .Include(u => u.Owner)
+                    .Where(i => i.UserID == owner.UserID).SingleOrDefault();
+
+                if(restaurant!=null)
+                {
+                    return View("Details",restaurant);
+                }else
+                {
+                    ViewBag.OwnerID = owner.UserID;
+                    return View("Create");
+                }                
+            }
+            else
+            {
+                return HttpNotFound();
+            }
+                
         }
 
         protected override void Dispose(bool disposing)

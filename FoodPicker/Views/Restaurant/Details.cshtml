@@ -6,116 +6,138 @@
 
 <h2>@Html.DisplayFor(model => model.Name)</h2>
 <hr />
+@if (User.IsInRole("admin")|| User.IsInRole("owner")) { 
 <p>
-    @Html.ActionLink("Add New Food", "Create", "Food")
+    <a class="btn btn-info" href="@Url.Action("Create","Food")">Add New Food</a>
+    @*@Html.ActionLink("Add New Food", "Create", "Food")*@
+
+    @*@Html.ActionLink("Edit", "Edit", new { id = Model.RestaurantID }) |*@
+    <a class="btn btn-success" href="@Url.Action("Edit", new { id = Model.RestaurantID }))">Edit Restaurant Info</a>
+
+    @if (User.IsInRole("admin"))
+    {
+        <a class="btn btn-info" href="@Url.Action("Index")">Back to Restaurant List</a>
+        @*@Html.ActionLink("Back to List", "Index")*@
+    }    
 </p>
+<hr />
+}
 <div>
-    
+
     <div class="row">
 
-        <div class="col-md-6"> 
+        <div class="col-md-6">
             <script src="http://maps.googleapis.com/maps/api/js"></script>
             <script>
 
-            function initialize() {
-                var mapProp = {
-                    center: new google.maps.LatLng(46.0878, -64.7782),
-                    zoom: 12,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+                function initialize() {
+                    var mapProp = {
+                        center: new google.maps.LatLng(46.0878, -64.7782),
+                        zoom: 12,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    };
+                    var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
 
-                
 
-                var infowindow = new google.maps.InfoWindow();
-                infowindow.setContent('<h4>@Model.Name</h4>');
-                var geocoder = new google.maps.Geocoder();
-                var marker;
-                var address = '@Model.Address';
 
-                geocoder.geocode({ 'address': address }, function (results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        map.setCenter(results[0].geometry.location);
-                        marker = new google.maps.Marker({
-                            map: map,
-                            position: results[0].geometry.location
-                        });
-                        infowindow.open(map, marker);
-                    }
-                    // else {
-                    //    alert('Geocode was not successful for the following reason: ' + status);
-                    //}
-                });
+                    var infowindow = new google.maps.InfoWindow();
+                    infowindow.setContent('<h4>@Model.Name</h4>');
+                    var geocoder = new google.maps.Geocoder();
+                    var marker;
+                    var address = '@Model.Address';
 
-            }
+                    geocoder.geocode({ 'address': address }, function (results, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            map.setCenter(results[0].geometry.location);
+                            marker = new google.maps.Marker({
+                                map: map,
+                                position: results[0].geometry.location
+                            });
+                            infowindow.open(map, marker);
+                        }
+                        // else {
+                        //    alert('Geocode was not successful for the following reason: ' + status);
+                        //}
+                    });
 
-            google.maps.event.addDomListener(window, 'load', initialize);
+                }
+
+                google.maps.event.addDomListener(window, 'load', initialize);
             </script>
-            <div id="googleMap" style="width:500px;height:380px;" class="center-block"></div>
+            <div id="googleMap" style="width:500px;height:380px;" class="block"></div>
+            <hr />
+            <div class="center-block">
+                <h4>
+                    @Html.DisplayNameFor(model => model.Description)
+                </h4>
+                <p>
+                    @Html.DisplayFor(model => model.Description)
+                </p>
+            </div>
         </div>
-    
+
         <div class="col-md-6">
-            
-            <img src="../../RestoImages/@Model.ImageName" class="img img-responsive img-rounded"/>
-            
+
+            <img src="../../RestoImages/@Model.ImageName" class="img img-responsive img-rounded" />
+            <hr />
             <dl>
 
 
                 @*<dt>
-                    @Html.DisplayNameFor(model => model.Owner.FirstName)
-                </dt>
+                        @Html.DisplayNameFor(model => model.Owner.FirstName)
+                    </dt>
 
-                <dd>
-                    @Html.DisplayFor(model => model.Owner.FirstName)
-                </dd>*@
-
-                @*<dt>
-                    @Html.DisplayNameFor(model => model.Name)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.Name)
-                </dd>*@
+                    <dd>
+                        @Html.DisplayFor(model => model.Owner.FirstName)
+                    </dd>*@
 
                 @*<dt>
-                    @Html.DisplayNameFor(model => model.StreetAddress)
-                </dt>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
 
-                <dd>
-                    @Html.DisplayFor(model => model.StreetAddress)
-                </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>*@
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.City)
-                </dt>
+                @*<dt>
+                        @Html.DisplayNameFor(model => model.StreetAddress)
+                    </dt>
 
-                <dd>
-                    @Html.DisplayFor(model => model.City)
-                </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.StreetAddress)
+                    </dd>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.Province)
-                </dt>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.City)
+                    </dt>
 
-                <dd>
-                    @Html.DisplayFor(model => model.Province)
-                </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.City)
+                    </dd>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.PostalCode)
-                </dt>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Province)
+                    </dt>
 
-                <dd>
-                    @Html.DisplayFor(model => model.PostalCode)
-                </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.Province)
+                    </dd>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.Country)
-                </dt>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PostalCode)
+                    </dt>
 
-                <dd>
-                    @Html.DisplayFor(model => model.Country)
-                </dd>*@
+                    <dd>
+                        @Html.DisplayFor(model => model.PostalCode)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Country)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Country)
+                    </dd>*@
 
                 <dt>
                     @Html.DisplayNameFor(model => model.Address)
@@ -178,13 +200,13 @@
                     @Html.DisplayFor(model => model.Url)
                 </dd>
 
-                <dt>
+                @*<dt>
                     @Html.DisplayNameFor(model => model.Description)
                 </dt>
 
                 <dd>
                     @Html.DisplayFor(model => model.Description)
-                </dd>
+                </dd>*@
 
             </dl>
         </div>
@@ -202,36 +224,41 @@
 </div>
 
 @*@{
-    var action = (User.IsInRole("admin") ? "Index" : "Listing");
-}*@
+        var action = (User.IsInRole("admin") ? "Index" : "Listing");
+    }*@
 
 
 <div class="row">
-    @foreach (var item in Model.Foods)
+    @if (Model.Foods.Count() != 0)
     {
+        @*<p> Number of Foods: @Model.Foods.Count()</p>*@
+        foreach (var item in Model.Foods)
+        {
 
-        <div class="col-sm-6 col-md-3 center-block">
-            <div class="thumbnail center-block">
-                <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
-                    <img src="~/FoodImages/@item.ImageName" alt="@item.Name" class="img-responsive" />
-                </a>
-                <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
-                    <div class="caption text-center">
-                        @item.Name
+            <div class="col-sm-6 col-md-3 center-block">
+                <div class="thumbnail center-block">
+                    <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
+                        <img src="~/FoodImages/@item.ImageName" alt="@item.Name" class="img-responsive" />
+                    </a>
+                    <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
+                        <div class="caption text-center">
+                            @item.Name
 
-                    </div>
-                </a>
+                        </div>
+                    </a>
+                </div>
             </div>
+        }
+    }
+    else
+    {
+        <div class="col-md-12">
+            <p> No Foods offered yet</p>
         </div>
-
     }
 </div>
 
 
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.RestaurantID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
 
 
 

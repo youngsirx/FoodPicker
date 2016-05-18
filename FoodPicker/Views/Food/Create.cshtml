@@ -102,30 +102,30 @@
 
                     @{
                         int cnt = 0;
-                        List<FoodPicker.ViewModels.CategoryData> categories = ViewBag.Catagories;
+                        if (ViewBag.Catagories != null)
+                        { @*jkhalack: check whether the viewbag was empty*@
+                    List<FoodPicker.ViewModels.CategoryData> categories = ViewBag.Catagories;
 
                         foreach (var category in categories)
                         {
-                @* mwilliams: Using @: to explicitly indicate the start of content
-                    in this case it will add a space
-                    http://weblogs.asp.net/scottgu/asp-net-mvc-3-razor-s-and-lt-text-gt-syntax
-                *@
-                if (cnt++ % 3 == 0)
-                {
-                @:<tr>
-                        }
-                @:<td style="border:none">
-                    <input type="checkbox"
-                           name="selectedCategory"
-                           value="@category.CategoryID"
-                           @(Html.Raw(category.Assigned ? "checked=\"checked\"" : "")) />
-                    @category.CategoryID @:  @category.CategoryName
-                    @:</td>
-                        }
-                @:</tr>
-
-
-
+                                @* mwilliams: Using @: to explicitly indicate the start of content
+                        in this case it will add a space
+                        http://weblogs.asp.net/scottgu/asp-net-mvc-3-razor-s-and-lt-text-gt-syntax
+                                *@
+                    if (cnt++ % 3 == 0)
+                    {
+                        @:<tr>
+                    }
+                    @: <td style="border:none">
+                        <input type="checkbox"
+                               name="selectedCategory"
+                               value="@category.CategoryID"
+                               @(Html.Raw(category.Assigned ? "checked=\"checked\"" : "")) />
+                        @category.CategoryID @:  @category.CategoryName
+                                @:</td>
+                        }@*end of foreach*@
+                            @:</tr>
+                      } @*jkhalack: end of checking whether the viewbag was empty*@
                     }
                 </table>
 
