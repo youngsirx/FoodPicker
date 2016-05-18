@@ -415,9 +415,11 @@ namespace FoodPicker.Controllers
 
         public ActionResult FoodsByCategory(string name)
         {
-            Category category = db.Categories.Where(i => i.CategoryName == name).Single();
-            var foods = db.Foods.Where(i => i.FoodID == category.CategoryID);
+            //Category category = db.Categories.Where(i => i.CategoryName == name).Single();
+            // var foods = db.Foods.Where(i => i.FoodID == category.CategoryID);
 
+            var categories = db.Categories.Include(f => f.Foods).Where(f => f.CategoryName == name).SingleOrDefault();
+            var foods = categories.Foods;
             ViewBag.name = name;
 
             return View(foods.ToList());
