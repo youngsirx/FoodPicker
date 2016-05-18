@@ -41,11 +41,6 @@ namespace FoodPicker.Controllers
 
             
 
-
-
-
-            
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -58,8 +53,28 @@ namespace FoodPicker.Controllers
             return View(food);
         }
 
+        // GET: Food/Details/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddDetails(int? id)
+        {
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext.Create()));
+            var currentUser = manager.FindById(User.Identity.GetUserId());
+            var viewModel = new FavoriteData();
+            viewModel.Users = db.Users.Include(i => i.Foods).Where(i => i.Email == currentUser.Email);
+
+            var user = viewModel.Users.Where(i => i.Email == currentUser.Email).Single();
+
+            viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
+
+
+            return View();
+        }
+
+
         //jyoung added check box
         // GET: Food/Create
+
         public ActionResult Create()
         {
             if (User.IsInRole("owner"))
@@ -419,15 +434,26 @@ namespace FoodPicker.Controllers
 
             viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
 
-
+            var fav = db.Foods.Find(id);
+            var context = new User();
+            var foodToDelete = context.Foods.FirstOrDefault(i => i.FoodID == fav.FoodID);
+            if(foodToDelete != null)
+            {
+                context.Foods.Remove(foodToDelete);
+                db.SaveChanges();
+            }
             
-
             
-            db.SaveChanges();
+            
+                   
+            //var fav = db.Foods.Find(id);
+            //var removals = fav.Users.Single();
 
-            //return View(viewModel);
-            //jkhalack: the view expects a list of Foods - let's provide it
-            return View(viewModel.Foods);
+            //fav.Users.Remove(removals);
+            
+            //db.SaveChanges();
+                       
+            return RedirectToAction("Favorite");
         }
 
 
