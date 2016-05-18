@@ -6,7 +6,7 @@
 <div>
     <h4>@Model.FirstName @Model.LastName</h4>
     <hr />
-    @using (Html.BeginForm("EditInfo", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    @using (Html.BeginForm("EditInfo", "Manage", new { id = Model.UserID}, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
 
