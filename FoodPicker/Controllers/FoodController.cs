@@ -58,7 +58,30 @@ namespace FoodPicker.Controllers
         // GET: Food/Create
         public ActionResult Create()
         {
-            ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name");
+            if (User.IsInRole("owner"))
+            {
+                string userId = User.Identity.GetUserId();
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var manager = new UserManager<ApplicationUser>(
+                        new UserStore<ApplicationUser>(ApplicationDbContext.Create())
+                        );
+                    var currentUser = manager.FindByEmail(User.Identity.GetUserName());
+                    //get the restaurant entity for this logged in user
+                    User owner = db.Users.Where(i => i.Email == currentUser.Email).Single();
+                    Restaurant restaurant = db.Restaurants
+                    .Include(u => u.Owner)
+                    .Where(i => i.UserID == owner.UserID).SingleOrDefault();
+                    if (restaurant == null) { return View("NoRestaurant"); }
+                    ViewBag.RestoID = restaurant.RestaurantID;
+                }
+            }
+            else
+            {
+                ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name");
+            }
+
+               
 
             var food = new Food();
             food.Categories = new List<Category>();
@@ -109,7 +132,11 @@ namespace FoodPicker.Controllers
                         ModelState.AddModelError("", "Please use a PNG image only.");
 
                         //jkhalack: we need to provide this list in a view bag to display a dropdown list for the restaurants
-                        ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
+                        if (User.IsInRole("owner")) { ViewBag.RestoID = food.RestaurantID; }
+                        else
+                        {
+                            ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
+                        }
                         PopulateAssignedCategories(food);
                         //jkhalack: end view bag
 
@@ -140,7 +167,10 @@ namespace FoodPicker.Controllers
                     ModelState.AddModelError("", "You have not selected an image file to upload.");
 
                     //jkhalack: we need to provide this list in a view bag to display a dropdown list for the restaurants
+                    if (User.IsInRole("owner")) { ViewBag.RestoID = food.RestaurantID; }
+                    else { 
                     ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
+                    }
                     PopulateAssignedCategories(food);
                     //jkhalack: end view bag
 
@@ -148,8 +178,11 @@ namespace FoodPicker.Controllers
                 }
 
             }//end of modelstate
-            ViewBag.ResturantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
-
+            if (User.IsInRole("owner")) { ViewBag.RestoID = food.RestaurantID; }
+            else
+            {
+                ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
+            }
             PopulateAssignedCategories(food);
 
             return View(food);

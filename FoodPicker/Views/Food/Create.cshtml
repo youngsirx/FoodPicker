@@ -48,14 +48,20 @@
                 </div>
             </div>
 
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.RestaurantID, "Restaurant", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownList("RestaurantID", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.RestaurantID, "", new { @class = "text-danger" })
+            @if (!User.IsInRole("owner"))
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RestaurantID, "Restaurant", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("RestaurantID", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.RestaurantID, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
+            }
+            else 
+            {
+                <input id="RestaurantID" name="RestaurantID" type="hidden" value="@ViewBag.RestoID" />
+            }
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -106,22 +112,22 @@
                         { @*jkhalack: check whether the viewbag was empty*@
                     List<FoodPicker.ViewModels.CategoryData> categories = ViewBag.Catagories;
 
-                        foreach (var category in categories)
-                        {
-                                @* mwilliams: Using @: to explicitly indicate the start of content
-                        in this case it will add a space
-                        http://weblogs.asp.net/scottgu/asp-net-mvc-3-razor-s-and-lt-text-gt-syntax
-                                *@
+                    foreach (var category in categories)
+                    {
+                        @* mwilliams: Using @: to explicitly indicate the start of content
+                            in this case it will add a space
+                            http://weblogs.asp.net/scottgu/asp-net-mvc-3-razor-s-and-lt-text-gt-syntax
+                        *@
                     if (cnt++ % 3 == 0)
                     {
                         @:<tr>
                     }
-                    @: <td style="border:none">
+                    @:<td style="border:none">
                         <input type="checkbox"
                                name="selectedCategory"
                                value="@category.CategoryID"
                                @(Html.Raw(category.Assigned ? "checked=\"checked\"" : "")) />
-                        @category.CategoryID @:  @category.CategoryName
+                            @category.CategoryID @:  @category.CategoryName
                                 @:</td>
                         }@*end of foreach*@
                             @:</tr>
