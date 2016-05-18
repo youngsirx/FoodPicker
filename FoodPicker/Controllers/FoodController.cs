@@ -41,11 +41,6 @@ namespace FoodPicker.Controllers
 
             
 
-
-
-
-            
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -58,8 +53,28 @@ namespace FoodPicker.Controllers
             return View(food);
         }
 
+        // GET: Food/Details/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddDetails(int? id)
+        {
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext.Create()));
+            var currentUser = manager.FindById(User.Identity.GetUserId());
+            var viewModel = new FavoriteData();
+            viewModel.Users = db.Users.Include(i => i.Foods).Where(i => i.Email == currentUser.Email);
+
+            var user = viewModel.Users.Where(i => i.Email == currentUser.Email).Single();
+
+            viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
+
+
+            return View();
+        }
+
+
         //jyoung added check box
         // GET: Food/Create
+
         public ActionResult Create()
         {
             if (User.IsInRole("owner"))
@@ -249,15 +264,14 @@ namespace FoodPicker.Controllers
         // POST: Food/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "FoodID, Pirce, Description, Name")]Food food, string[] selectedCategory, HttpPostedFileBase ImageName)
+        public ActionResult EditPost(int? id,  string[] selectedCategory, HttpPostedFileBase ImageName)
         {
-
-
+            
             var foodToUpdate = db.Foods
                .Include(i => i.Categories)
-               .Where(i => i.FoodID == food.FoodID).Single();
+               .Where(i => i.FoodID == id).Single();
 
             if (ModelState.IsValid)
             {
@@ -282,7 +296,8 @@ namespace FoodPicker.Controllers
                  {
                         "image/gif",
                         "image/jpg",
-                        "image/jpeg",
+                       "image/jpeg",
+                     
                      "image/png"
                  };
                     if (!validImageTypes.Contains(ImageName.ContentType))
@@ -291,28 +306,28 @@ namespace FoodPicker.Controllers
                         ModelState.AddModelError("", "Please use a PNG image only.");
 
                         //jkhalack: populate ViewBag to retry the edit
-                        PopulateAssignedCategories(food);
-                        ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
+                        PopulateAssignedCategories(foodToUpdate);
+                        ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", foodToUpdate.RestaurantID);
                         //jkhalack: end populate ViewBag to retry the edit
 
-                        return View(food);
+                        return View(foodToUpdate);
                     }
 
                     //retrieve the IDENTITY (new name for image) FROM sql sERVER
-                    string pictureName = food.FoodID.ToString();
+                    string pictureName = foodToUpdate.FoodID.ToString();
 
                     //next rename, scale an upload the image.
                     ImageUpload imageUpload = new ImageUpload { Width = 300, Height = 200 };
                     ImageResult imageResult = imageUpload.RenameUploadFile(ImageName, pictureName);
 
-                    food.ImageName = pictureName + ".png";
+                    foodToUpdate.ImageName = pictureName + ".png";
                    // db.Entry(food).State = EntityState.Modified;
                     db.SaveChanges();
 
 
                 }
                
-                return RedirectToAction("Details", new { id = food.FoodID });
+                return RedirectToAction("Details", new { id = id });
             }
 
             PopulateAssignedCategories(foodToUpdate);
@@ -381,19 +396,15 @@ namespace FoodPicker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-
-
             Food food = db.Foods.Find(id);
 
-            string image = food.ImageName.ToString();
-
-
+            
             db.Foods.Remove(food);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        
+      
         public ActionResult Favorite(int? id)
         {
             var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext.Create()));
@@ -405,18 +416,55 @@ namespace FoodPicker.Controllers
 
             viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
 
-
             //return View(viewModel);
             //jkhalack: the view expects a list of Foods - let's provide it
             return View(viewModel.Foods);
         }
 
+        [HttpPost, ActionName("Favorite")]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveFavorite(int? id)
+        {
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext.Create()));
+            var currentUser = manager.FindById(User.Identity.GetUserId());
+            var viewModel = new FavoriteData();
+            viewModel.Users = db.Users.Include(i => i.Foods).Where(i => i.Email == currentUser.Email);
+
+            var user = viewModel.Users.Where(i => i.Email == currentUser.Email).Single();
+
+            viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
+
+            var fav = db.Foods.Find(id);
+            var context = new User();
+            var foodToDelete = context.Foods.FirstOrDefault(i => i.FoodID == fav.FoodID);
+            if(foodToDelete != null)
+            {
+                context.Foods.Remove(foodToDelete);
+                db.SaveChanges();
+            }
+            
+            
+            
+                   
+            //var fav = db.Foods.Find(id);
+            //var removals = fav.Users.Single();
+
+            //fav.Users.Remove(removals);
+            
+            //db.SaveChanges();
+                       
+            return RedirectToAction("Favorite");
+        }
+
+
 
         public ActionResult FoodsByCategory(string name)
         {
-            Category category = db.Categories.Where(i => i.CategoryName == name).Single();
-            var foods = db.Foods.Where(i => i.FoodID == category.CategoryID);
+            //Category category = db.Categories.Where(i => i.CategoryName == name).Single();
+            // var foods = db.Foods.Where(i => i.FoodID == category.CategoryID);
 
+            var categories = db.Categories.Include(f => f.Foods).Where(f => f.CategoryName == name).SingleOrDefault();
+            var foods = categories.Foods;
             ViewBag.name = name;
 
             return View(foods.ToList());

@@ -6,9 +6,7 @@
 
 <h2>Favorite</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+
 <table class="table">
     <tr>
         <th>
@@ -17,8 +15,8 @@
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
-       
-       
+      
+        <th></th>
         <th>
             @Html.DisplayNameFor(model => model.Price)
         </th>
@@ -35,17 +33,30 @@
         <td>
             @Html.DisplayFor(modelItem => item.Name)
         </td>
-        
+        <td>
+            
+                <div class="thumbnail center-block">
+
+                    <img src="~/FoodImages/@item.ImageName" alt="@item.Name" class="img-responsive" />
+
+                </div>
+            
+        </td>
        
         <td>
             @Html.DisplayFor(modelItem => item.Price)
         </td>
-       
+        
       
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.FoodID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.FoodID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.FoodID })
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-actions no-color">
+                      <input type="submit" value="Remove" class="btn btn-danger" /> | @Html.ActionLink("Go To Details", "Details", new { id = item.FoodID})
+                </div>
+            }
         </td>
     </tr>
 }@**@
