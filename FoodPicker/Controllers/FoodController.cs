@@ -54,7 +54,7 @@ namespace FoodPicker.Controllers
         }
 
         // GET: Food/Details/5
-        [HttpPost]
+        [HttpPost, ActionName("Details")]
         [ValidateAntiForgeryToken]
         public ActionResult AddDetails(int? id)
         {
@@ -67,8 +67,32 @@ namespace FoodPicker.Controllers
 
             viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
 
+            
 
-            return View();
+            //var foodItem= db.Foods.Find(id);
+
+            //var food = db.Foods.Where(i => i.FoodID == FoodID).SingleOrDefault();
+
+            //if(food != null)
+            //{
+               
+            //var add = foodItem.Users.FirstOrDefault();
+
+           //foodItem.Users.Add(add);
+
+            //}
+            //else
+            //{
+
+            //    var fav = db.Foods.Find(FoodID);
+            //    var removals = fav.Users.Single();
+
+            //    fav.Users.Remove(removals);
+            //}
+
+            db.SaveChanges();
+
+            return RedirectToAction("Details");
         }
 
 
@@ -416,6 +440,7 @@ namespace FoodPicker.Controllers
 
             viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
 
+
             //return View(viewModel);
             //jkhalack: the view expects a list of Foods - let's provide it
             return View(viewModel.Foods);
@@ -423,7 +448,7 @@ namespace FoodPicker.Controllers
 
         [HttpPost, ActionName("Favorite")]
         [ValidateAntiForgeryToken]
-        public ActionResult RemoveFavorite(int? id)
+        public ActionResult RemoveFavorite(int? FoodID)
         {
             var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext.Create()));
             var currentUser = manager.FindById(User.Identity.GetUserId());
@@ -433,26 +458,15 @@ namespace FoodPicker.Controllers
             var user = viewModel.Users.Where(i => i.Email == currentUser.Email).Single();
 
             viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
+            
 
-            var fav = db.Foods.Find(id);
-            var context = new User();
-            var foodToDelete = context.Foods.FirstOrDefault(i => i.FoodID == fav.FoodID);
-            if(foodToDelete != null)
-            {
-                context.Foods.Remove(foodToDelete);
-                db.SaveChanges();
-            }
-            
-            
-            
-                   
-            //var fav = db.Foods.Find(id);
-            //var removals = fav.Users.Single();
+            var fav = db.Foods.Find(FoodID);
+            var removals = fav.Users.Single();
 
-            //fav.Users.Remove(removals);
-            
-            //db.SaveChanges();
-                       
+            fav.Users.Remove(removals);
+
+            db.SaveChanges();
+
             return RedirectToAction("Favorite");
         }
 
