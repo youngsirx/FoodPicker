@@ -60,25 +60,31 @@ namespace FoodPicker.Controllers
         {
             var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext.Create()));
             var currentUser = manager.FindById(User.Identity.GetUserId());
-            var viewModel = new FavoriteData();
-            viewModel.Users = db.Users.Include(i => i.Foods).Where(i => i.Email == currentUser.Email);
+            User userToUpdate = db.Users.Include(i => i.Foods).Where(i => i.Email == currentUser.Email).SingleOrDefault();
+            Food foodToDelete = db.Foods.Where(i => i.FoodID == id).SingleOrDefault();
+            if (foodToDelete != null)
+            {
+                userToUpdate.Foods.Add(foodToDelete);
+            }
+            else
+            {
+                userToUpdate.Foods.Remove(foodToDelete);
+            }
 
-            var user = viewModel.Users.Where(i => i.Email == currentUser.Email).Single();
+            db.SaveChanges();
 
-            viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
 
-            
-
+            return RedirectToAction("Details");
             //var foodItem= db.Foods.Find(id);
 
             //var food = db.Foods.Where(i => i.FoodID == FoodID).SingleOrDefault();
 
             //if(food != null)
             //{
-               
+
             //var add = foodItem.Users.FirstOrDefault();
 
-           //foodItem.Users.Add(add);
+            //foodItem.Users.Add(add);
 
             //}
             //else
@@ -90,9 +96,8 @@ namespace FoodPicker.Controllers
             //    fav.Users.Remove(removals);
             //}
 
-            db.SaveChanges();
+           
 
-            return RedirectToAction("Details");
         }
 
 
@@ -469,6 +474,7 @@ namespace FoodPicker.Controllers
 
             return RedirectToAction("Favorite");
         }
+
 
 
 
