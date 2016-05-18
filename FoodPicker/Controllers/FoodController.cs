@@ -402,9 +402,10 @@ namespace FoodPicker.Controllers
 
             viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
 
-           
 
-            return View(viewModel);
+            //return View(viewModel);
+            //jkhalack: the view expects a list of Foods - let's provide it
+            return View(viewModel.Foods);
         }
 
 

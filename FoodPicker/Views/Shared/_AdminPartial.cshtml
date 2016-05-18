@@ -17,7 +17,7 @@
     }
     else if (User.IsInRole("user"))
     {
-        <li>@Html.ActionLink("My Favourites", "Index", "Favourite")</li>
+        <li>@Html.ActionLink("My Favorites", "Favorite", "Food")</li>
     
         if (User.IsInRole("owner"))
         {

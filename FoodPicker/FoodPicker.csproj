@@ -313,6 +313,7 @@
     <Content Include="Views\Shared\_FoodMenuPartial.cshtml" />
     <Content Include="Views\Food\FoodsByCategory.cshtml" />
     <Content Include="Views\Food\NoRestaurant.cshtml" />
+    <Content Include="Views\Shared\_AdminPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
