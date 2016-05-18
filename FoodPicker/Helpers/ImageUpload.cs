@@ -56,7 +56,10 @@ namespace FoodPicker.Helpers
 
             //file doesn't exist, upload item but validate first
             //return UploadFile(file, finalFileName);
-            return UploadFile(file, name + extension);
+
+            //jkhalack: try to decide on extention in UploadFile
+            //return UploadFile(file, name + extension);
+            return UploadFile(file, name + ".png");
 
         }
         //public ImageResult RenameUploadFile(HttpPostedFileBase file, Int32 counter = 0)
@@ -98,7 +101,13 @@ namespace FoodPicker.Helpers
                 //pass in whatever value you want 
                 Image imgActual = FixedSize(imgOriginal);
                 imgOriginal.Dispose();
-                imgActual.Save(path);
+                //imgActual.Save(path);
+
+
+
+
+                //jkhalack: try to save any image as PNG
+                imgActual.Save(path, ImageFormat.Png);
                 imgActual.Dispose();
 
                 imageResult.ImageName = fileName;

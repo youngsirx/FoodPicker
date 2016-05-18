@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using FoodPicker.Models;
+using System.Net;
 
 namespace FoodPicker.Controllers
 {
@@ -73,6 +74,24 @@ namespace FoodPicker.Controllers
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
             return View(model);
+        }
+
+        //
+        // GET: /Manage/UserInfo
+        public async Task<ActionResult> UserInfo()
+        {
+            var userId = User.Identity.GetUserId();
+            var email = await UserManager.GetEmailAsync(userId);
+
+
+            //get the restaurant entity for this logged in user
+            FoodPicker.DAL.FoodContext foodDB = new FoodPicker.DAL.FoodContext();
+            FoodPicker.Models.User user =  foodDB.Users.Where(i => i.Email == email).SingleOrDefault();
+            if (user == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            return View(user);
         }
 
         //

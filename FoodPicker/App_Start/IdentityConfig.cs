@@ -26,9 +26,9 @@ namespace FoodPicker
 
 
             //credentials
-            var credentialUserName = "ukrainian.club.moncton@gmail.com";
-            var sentFrom = "\"IdentitySample.com\"<ukrainian.club.moncton@gmail.com>";
-            var pwd = "Slava7Ukraini";
+            var credentialUserName = "@gmail.com";
+            var sentFrom = "\"Foodpicker.com\"<@gmail.com>";
+            var pwd = "";
 
 
 

@@ -125,9 +125,9 @@ namespace FoodPicker.Controllers
 
                     var validImageTypes = new string[]
                    {
-                        //"image/gif",
-                        //"image/jpg",
-                        //"image/jpeg",
+                        "image/gif",
+                        "image/jpg",
+                        "image/jpeg",
                         "image/png"
                    };
                     if (!validImageTypes.Contains(ImageName.ContentType))
@@ -280,10 +280,9 @@ namespace FoodPicker.Controllers
                 {
                     var validImageTypes = new string[]
                  {
-                        //"image/gif",
-                       //, "image/jpg",
-                        //,"image/jpeg"
-                     
+                        "image/gif",
+                        "image/jpg",
+                        "image/jpeg",
                      "image/png"
                  };
                     if (!validImageTypes.Contains(ImageName.ContentType))
