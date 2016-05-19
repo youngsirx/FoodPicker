@@ -38,10 +38,10 @@ namespace FoodPicker.Controllers
             //var user = viewModel.Users.Where(i => i.Email == currentUser.Email).Single();
 
             //viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
-
-            
-
            
+            
+            
+         
 
             if (id == null)
             {
@@ -72,11 +72,31 @@ namespace FoodPicker.Controllers
             var currentUser = manager.FindById(User.Identity.GetUserId());
             User userToUpdate = db.Users.Include(i => i.Foods).Where(i => i.Email == currentUser.Email).SingleOrDefault();
             Food foodToUpdate = db.Foods.Where(i => i.FoodID == id).SingleOrDefault();
+
+
+
+            var user = db.Users.Where(i => i.Email == currentUser.Email).Single();
+            //var fav = db.Foods.Find(id);
+            //var removals = fav.Users.Single();
+
+            var fav = db.Foods.Find(id);
+
+            var removals = fav.Users.Where(i => i.UserID == user.UserID).SingleOrDefault();
+            
+
+
             if (foodToUpdate != null)
             {
-             
-                userToUpdate.Foods.Add(foodToUpdate);
-
+                if (removals != null)
+                {
+                    
+                }
+                else
+                {
+                    userToUpdate.Foods.Add(foodToUpdate);
+                    
+                }
+                
             }
      
             db.SaveChanges();
@@ -504,7 +524,10 @@ namespace FoodPicker.Controllers
             
 
             var fav = db.Foods.Find(FoodID);
-            var removals = fav.Users.Single();
+
+            var removals = fav.Users.Where(i => i.UserID == user.UserID).SingleOrDefault();
+
+            //var removals = fav.Users.SingleOrDefault();
 
             fav.Users.Remove(removals);
 

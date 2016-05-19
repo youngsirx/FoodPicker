@@ -26,9 +26,9 @@ namespace FoodPicker
 
 
             //credentials
-            var credentialUserName = "";
-            var sentFrom = "";
-            var pwd = "";
+            var credentialUserName = "portfolio.iamjordanyoung@gmail.com";
+            var sentFrom = "\"foodpicker.iamjordanyoung.com\"<portfolio.iamjordanyoung@gmail.com>";
+            var pwd = "kidm@n12";
 
 
 
