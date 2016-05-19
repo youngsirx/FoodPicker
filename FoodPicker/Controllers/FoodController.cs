@@ -532,6 +532,47 @@ namespace FoodPicker.Controllers
             return View(foods.ToList());
         }
 
+        //[HttpPost]
+        public ActionResult SearchResults(string searchstring)
+        {
+            //first find the categories that contain that string
+            var categories = db.Categories.Where(i => i.CategoryName.Contains(searchstring));
+            //var foods = db.Foods.Where(i => i.FoodID == category.CategoryID);
+
+
+
+
+            var foodsByCategory = new List<Food>();
+            foreach (var category in categories)
+            {
+                db.Entry(category).Collection(x => x.Foods).Load();
+                foreach (Food food in category.Foods)
+                {
+                    db.Entry(food).Reference(x => x.Restaurant).Load();
+                }
+                foodsByCategory = foodsByCategory.Concat(category.Foods.ToList()).ToList();
+            }
+                 
+
+
+
+            ViewBag.name = searchstring;
+
+
+
+            //jkhalack: now find the foods that contain the string in the Food nam or in description
+
+            var foodsByName = db.Foods.Where(i => i.Name.Contains(searchstring) || i.Description.Contains(searchstring))
+                .OrderBy(i=>i.AverageRating).ToList();
+
+            var foods = new List<Food>(foodsByName.Count + foodsByCategory.Count);
+            foods.AddRange(foodsByName);
+            foods.AddRange(foodsByCategory);
+
+
+
+            return View(foods);
+        }
 
         protected override void Dispose(bool disposing)
         {

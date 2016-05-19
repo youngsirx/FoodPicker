@@ -1,0 +1,95 @@
+﻿@model IEnumerable<FoodPicker.Models.Food>
+
+
+@{
+    ViewBag.Title = "Search Results";
+
+
+}
+
+<h2>Search results for: @ViewBag.name</h2>
+
+@* map of moncton *@
+<div class="row">
+    <div class="col-md-12 ">
+
+        <script src="http://maps.googleapis.com/maps/api/js"></script>
+        <script>
+            function initialize() {
+                var mapProp = {
+                    center: new google.maps.LatLng(46.0958, -64.7782),
+                    zoom: 12,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+
+  @*jkhalack: add restaurant markers----------------------------------------------------------------------*@
+                var geocoder = new google.maps.Geocoder();
+                //var infowindow;
+                //var infowindow = new google.maps.InfoWindow();
+            @foreach(var item in Model)
+                {
+                    var pictureName = @item.FoodID + ".png";
+                    <text>
+                {
+                    geocoder.geocode({ 'address': '@item.Restaurant.Address' }, function (results, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            var marker = new google.maps.Marker({ map: map, position: results[0].geometry.location });
+                            var infowindow = new google.maps.InfoWindow();
+                            infowindow.setContent('<a href="@Url.Action("Details", "Food", new { id = item.FoodID })"><h5>@item.Name</h5> <img src="~/FoodImages/@item.ImageName" width="100"/> </a>');
+                            infowindow.open(map, marker);
+                            google.maps.event.addListener(marker, 'click', function () {
+                                //infowindow.setContent('<a href="@Url.Action("Details", "Food", new { id = item.FoodID })"><h5>@item.Name</h5> <img src="~/FoodImages/@item.ImageName" width="100"/> </a>');
+                                infowindow.open(map, marker);
+                            });
+                        }
+                    });
+                }
+                </text>
+            }
+  @*jkhalack: end restaurant markers----------------------------------------------------------------------*@
+            }
+            google.maps.event.addDomListener(window, 'load', initialize);
+        </script>
+        <div id="googleMap" style="width:1135px;height:380px;" class="center-block"></div>
+    </div>
+</div>
+@* end of map *@
+
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        @foreach (var item in Model)
+        {
+            <div class="col-sm-6 col-md-3 center-block text-center">
+                <div class="thumbnail">
+                    <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
+
+                        <img src="~/FoodImages/@item.ImageName" alt="@item.Name" />
+                    </a>
+                </div>
+                <a href="@Url.Action("Details","Food", new { id = item.FoodID})">
+                    <div class="caption">
+                        @item.Name
+                    </div>
+                </a>
+                <div>@Html.DisplayFor(modelItem => item.Restaurant.Name)</div>
+                <div>@Html.DisplayFor(modelItem => item.Price)</div>
+                <div class="">
+                    @if (item.AverageRating == null)
+                    {
+                        @Html.BootstrapRating().ReadOnly.Value(0)
+                    }
+                    else
+                    {
+                        @Html.BootstrapRating().ReadOnly.Value((double)item.AverageRating)
+                    }
+                </div>
+
+
+            </div>
+
+        }
+    </div>
+</div>
