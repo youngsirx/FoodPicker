@@ -594,8 +594,9 @@ namespace FoodPicker.Controllers
             return View(foods.ToList());
         }
 
-        //[HttpPost]
+        [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public ActionResult SearchResults(string searchstring)
         {
             //first find the categories that contain that string

@@ -45,7 +45,8 @@
 
 
                         <form class="navbar-form navbar-left" role="search" 
-                              action="@Url.Action("SearchResults","Food")" @*method="post"*@>
+                              action="@Url.Action("SearchResults","Food")" method="post">
+                            @Html.AntiForgeryToken()
                             <div class="form-group">
                                 <input type="text" class="form-control" 
                                        id="searchstring" name="searchstring" placeholder="Search">
