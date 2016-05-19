@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace FoodPicker.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private FoodContext db = new FoodContext();

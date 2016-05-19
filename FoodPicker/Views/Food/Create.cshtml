@@ -4,7 +4,7 @@
     ViewBag.Title = "Create";
 }
 
-<h2>Create</h2>
+<h2>Add New Food</h2>
 <div class="row">
     @using (Html.BeginForm("Create", "Food", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
@@ -12,7 +12,6 @@
 
         <div class="form-horizontal col-lg-8">
 
-            <h4>Food</h4>
 
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
@@ -58,7 +57,7 @@
                     </div>
                 </div>
             }
-            else 
+            else
             {
                 <input id="RestaurantID" name="RestaurantID" type="hidden" value="@ViewBag.RestoID" />
             }
@@ -92,7 +91,7 @@
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
+                    <input type="submit" value="Create" class="btn btn-success" />
                 </div>
             </div>
         </div>
@@ -121,38 +120,47 @@
                     if (cnt++ % 3 == 0)
                     {
                         @:<tr>
-                    }
-                    @:<td style="border:none">
-                        <input type="checkbox"
-                               name="selectedCategory"
-                               value="@category.CategoryID"
-                               @(Html.Raw(category.Assigned ? "checked=\"checked\"" : "")) />
-                             @category.CategoryName
+                            }
+                            @:<td style="border:none">
+                                <input type="checkbox"
+                                       name="selectedCategory"
+                                       value="@category.CategoryID"
+                                       @(Html.Raw(category.Assigned ? "checked=\"checked\"" : "")) />
+                                @category.CategoryName
                                 @:</td>
-                        }@*end of foreach*@
+                            }@*end of foreach*@
                             @:</tr>
-                      } @*jkhalack: end of checking whether the viewbag was empty*@
-                    }
+                    } @*jkhalack: end of checking whether the viewbag was empty*@
+                            }
 
-                </table>
+            </table>
 
-            </div>
+        </div>
 
             <div class="form-group">
                 <div class="caption"><h3>Or Add Your Own</h3></div>
-                <div class="col-md-10">     
-                    @Html.Label("", htmlAttributes: new { @class = "control-label col-md-2" })               
-                   <input id="categoryname" name="categoryname" type="text" class="form-control text-box single-line"/>
-                   
+                <div class="col-md-10">
+                    @Html.Label("", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <input id="categoryname" name="categoryname" type="text" class="form-control text-box single-line" />
+
                 </div>
             </div>
 
         </div>
 
                         }
-</div>
+    </div>
 
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+    <div>
+        <p>
+            <a class="btn btn-info" href="@Url.Action("Index")">Go to Food List</a>
+            @*@Html.ActionLink("Back to List", "Index")*@
+            @if (User.IsInRole("owner"))
+            {
+                <a class="btn btn-info" href="@Url.Action("MyRestaurant","Restaurant")">Back to my Restaurant</a>
+            }
+            
+        </p>
+        
+    </div>
