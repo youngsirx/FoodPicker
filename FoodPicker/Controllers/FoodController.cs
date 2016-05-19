@@ -596,6 +596,25 @@ namespace FoodPicker.Controllers
             return View(foods);
         }
 
+        private int? currentUserID()
+        {
+            string userId = User.Identity.GetUserId();
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var manager = new UserManager<ApplicationUser>(
+                   new UserStore<ApplicationUser>(ApplicationDbContext.Create())
+                   );
+                var currentUser = manager.FindByEmail(User.Identity.GetUserName());
+                //get the restaurant entity for this logged in user
+                User user = db.Users.Where(i => i.Email == currentUser.Email).SingleOrDefault();
+                if (user != null)
+                {
+                    return user.UserID;
+                }
+            }
+            return null;
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
