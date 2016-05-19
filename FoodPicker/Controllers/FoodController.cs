@@ -155,10 +155,11 @@ namespace FoodPicker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Name,Description,RestaurantID,Price")] Food food, HttpPostedFileBase ImageName, string[] selectedCategory,string categoryname)
         {
+            food.Categories = new List<Category>();
 
             if (selectedCategory != null)
             {
-                food.Categories = new List<Category>();
+                //food.Categories = new List<Category>();
 
 
                 foreach (var cat in selectedCategory)
@@ -170,28 +171,26 @@ namespace FoodPicker.Controllers
             }
             Category category = new Category();
                     
-                //try { 
+                
                 if (!string.IsNullOrEmpty(categoryname))
+                {
+                if(!(db.Categories.Any(i=>i.CategoryName == categoryname)))
                 {
                     //Category category = new Category();
                     category.CategoryName = categoryname;
                     db.Categories.Add(category);
                     await db.SaveChangesAsync();
-
-                    var categoryid = category.CategoryID;
-
                     food.Categories.Add(category);
-
-                    
-               
+                }
+                else
+                {
+                    category = db.Categories.Where(i => i.CategoryName == categoryname).SingleOrDefault();
+                    food.Categories.Add(category);
+                }
+    
             }
-                //}
-                //catch (Exception)
-                //{
-                //    ModelState.AddModelError("", "Unable to save changes. Try again later!");
-                //}
-            
-
+               
+      
             //jyoung: added image upload
             //added HttpPostedFileBase ImageName args in method
             //Also the form needs an enctype="multipart/form-data"
@@ -353,16 +352,25 @@ namespace FoodPicker.Controllers
                         UpdateFoodCategory(selectedCategory, foodToUpdate);
                         db.SaveChanges();
 
-                        if (categoryname != null)
+                        if (!string.IsNullOrEmpty(categoryname))
                         {
                             Category category = new Category();
-                            category.CategoryName = categoryname;
-                            db.Categories.Add(category);
-                            db.SaveChanges();
-                            foodToUpdate.Categories.Add(category);
-                            db.SaveChanges();
+                            if(!(db.Categories.Any(i=>i.CategoryName == categoryname)))
+                            {
+                                category.CategoryName = categoryname;
+                                db.Categories.Add(category);
+                                db.SaveChanges();
+                                foodToUpdate.Categories.Add(category);
+                                db.SaveChanges();
+                            }
+                            else
+                            {
+                                category = db.Categories.Where(i => i.CategoryName == categoryname).SingleOrDefault();
+                                foodToUpdate.Categories.Add(category);
+                                db.SaveChanges();
+                            }
+  
                         }
-
 
                     }
                     catch (Exception)
@@ -407,7 +415,7 @@ namespace FoodPicker.Controllers
 
 
                 }
-               
+                PopulateAssignedCategories(foodToUpdate);
                 return RedirectToAction("Details", new { id = id });
             }
 
