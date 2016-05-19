@@ -1,0 +1,14 @@
+﻿@model IEnumerable<FoodPicker.Models.Category>
+<div id="instuctors">
+    <ul>
+        @foreach (var item in Model)
+        {
+
+            <li>
+                <a href="@Url.Action("FoodsByCategory","Food",
+                        new { name = item.CategoryName })">@item.CategoryName</a>
+                    </li>
+        }
+    </ul>
+
+</div>
