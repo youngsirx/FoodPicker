@@ -74,38 +74,16 @@ namespace FoodPicker.Controllers
             Food foodToUpdate = db.Foods.Where(i => i.FoodID == id).SingleOrDefault();
             if (foodToUpdate != null)
             {
-          
+             
                 userToUpdate.Foods.Add(foodToUpdate);
-            }
-          
-            
 
+            }
+     
             db.SaveChanges();
 
 
             return RedirectToAction("Details");
-            //var foodItem= db.Foods.Find(id);
-
-            //var food = db.Foods.Where(i => i.FoodID == FoodID).SingleOrDefault();
-
-            //if(food != null)
-            //{
-
-            //var add = foodItem.Users.FirstOrDefault();
-
-            //foodItem.Users.Add(add);
-
-            //}
-            //else
-            //{
-
-            //    var fav = db.Foods.Find(FoodID);
-            //    var removals = fav.Users.Single();
-
-            //    fav.Users.Remove(removals);
-            //}
-
-           
+                  
 
         }
 
