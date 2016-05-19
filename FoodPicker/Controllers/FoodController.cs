@@ -101,8 +101,7 @@ namespace FoodPicker.Controllers
                 }
                 else
                 {
-                    userToUpdate.Foods.Add(foodToUpdate);
-                    
+                    userToUpdate.Foods.Add(foodToUpdate);                    
                 }
                 
             }
