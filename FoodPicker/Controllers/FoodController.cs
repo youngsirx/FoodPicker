@@ -167,6 +167,7 @@ namespace FoodPicker.Controllers
                     food.Categories.Add(categoryToAdd);
                  
                 }
+            }
                 //try { 
                 if (!string.IsNullOrEmpty(categoryname))
                 {
@@ -174,14 +175,20 @@ namespace FoodPicker.Controllers
                     category.CategoryName = categoryname;
                     db.Categories.Add(category);
                     await db.SaveChangesAsync();
+
+                    var categoryid = category.CategoryID;
+
                     food.Categories.Add(category);
-                }
+
+                    
+               
+            }
                 //}
                 //catch (Exception)
                 //{
                 //    ModelState.AddModelError("", "Unable to save changes. Try again later!");
                 //}
-            }
+            
 
             //jyoung: added image upload
             //added HttpPostedFileBase ImageName args in method
