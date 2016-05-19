@@ -122,6 +122,10 @@ namespace FoodPicker.Controllers
                     if (restaurant == null) { return View("NoRestaurant"); }
                     ViewBag.RestoID = restaurant.RestaurantID;
                 }
+
+
+                ViewBag.Category = new SelectList(db.Categories, "CategoryName", "CategoryID");
+
             }
             else
             {
