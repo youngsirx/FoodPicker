@@ -84,7 +84,7 @@ namespace FoodPicker.Controllers
             var email = await UserManager.GetEmailAsync(userId);
 
 
-            //get the restaurant entity for this logged in user
+            //get the food user entity for this logged in user
             FoodPicker.DAL.FoodContext foodDB = new FoodPicker.DAL.FoodContext();
             FoodPicker.Models.User user =  foodDB.Users.Where(i => i.Email == email).SingleOrDefault();
             if (user == null)
@@ -92,6 +92,36 @@ namespace FoodPicker.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             return View(user);
+        }
+
+        //
+        // POST: /Manage/EditInfo
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditInfo(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            FoodPicker.DAL.FoodContext foodDB = new FoodPicker.DAL.FoodContext();
+            FoodPicker.Models.User userToUpdate = foodDB.Users.Find(id);
+            if (TryUpdateModel(userToUpdate, "",
+               new string[] {"FirstName", "LastName" }))
+            {
+                try
+                {
+                    foodDB.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception)
+                {
+
+                    ModelState.AddModelError("", "Unable to save changes. Try again later!");
+                }
+            }
+
+            return View("UserInfo", userToUpdate);
         }
 
         //

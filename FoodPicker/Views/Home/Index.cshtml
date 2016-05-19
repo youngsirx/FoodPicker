@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<FoodPicker.Models.Food>
 @{
     ViewBag.Title = "Home Page";
+    var restaurantList = ViewBag.restaurants;
 }
 
 
@@ -34,11 +35,35 @@
         <script>
             function initialize() {
                 var mapProp = {
-                    center: new google.maps.LatLng(46.0878, -64.7782),
+                    center: new google.maps.LatLng(46.0958, -64.7782),
                     zoom: 12,
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 };
                 var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+
+  @*jkhalack: add restaurant markers----------------------------------------------------------------------*@
+                var geocoder = new google.maps.Geocoder();
+                //var infowindow;
+                var infowindow = new google.maps.InfoWindow();
+            @foreach(var item in restaurantList)
+                {
+                    var pictureName = @item.RestaurantID + ".jpg";
+                    <text>
+                {
+                    geocoder.geocode({ 'address': '@item.Address' }, function (results, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            var marker = new google.maps.Marker({ map: map, position: results[0].geometry.location });
+
+                            google.maps.event.addListener(marker, 'click', function () {
+                                infowindow.setContent('<a href="@Url.Action("Details", "Restaurant", new { id = item.RestaurantID })"><h5>@item.Name</h5> <img src="~/RestoImages/@pictureName" width="100"/> </a>');
+                                infowindow.open(map, marker);
+                            });
+                        }
+                    });
+                }
+                </text>
+            }
+  @*jkhalack: end restaurant markers----------------------------------------------------------------------*@
             }
             google.maps.event.addDomListener(window, 'load', initialize);
         </script>
