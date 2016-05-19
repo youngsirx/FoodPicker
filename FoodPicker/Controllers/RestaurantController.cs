@@ -157,10 +157,12 @@ namespace FoodPicker.Controllers
 
             Restaurant restaurantToUpdate = db.Restaurants.Find(id);
             
-            if (!User.IsInRole("admin")&& 
-                !(User.IsInRole("owner") && currentUserID() != restaurantToUpdate.UserID)
-                )
-            { return View("NotYourRestaurants"); }
+            if ( !(
+                User.IsInRole("admin") ||
+                ( User.IsInRole("owner") &&
+                currentUserID() == restaurantToUpdate.UserID )
+                ) )
+            { return View("NotYourRestaurant"); }
 
             if (TryUpdateModel(restaurantToUpdate, "",
                new string[] { "Name", "StreetAddress", "City", "Province", "PostalCode", "Country", "Phone",

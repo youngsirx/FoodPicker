@@ -12,7 +12,7 @@
     @*@Html.ActionLink("Add New Food", "Create", "Food")*@
 
     @*@Html.ActionLink("Edit", "Edit", new { id = Model.RestaurantID }) |*@
-    <a class="btn btn-success" href="@Url.Action("Edit", new { id = Model.RestaurantID }))">Edit Restaurant Info</a>
+    <a class="btn btn-success" href="@Url.Action("Edit", new { id = Model.RestaurantID })">Edit Restaurant Info</a>
 
     @if (User.IsInRole("admin"))
     {

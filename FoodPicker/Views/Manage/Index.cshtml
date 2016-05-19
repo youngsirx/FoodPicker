@@ -3,7 +3,7 @@
     ViewBag.Title = "Manage Profile";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>Profile management.</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
@@ -11,21 +11,24 @@
     <hr />
 
     <div>
-        <h4>Profile:</h4>
-        <p>@Html.ActionLink("Update Profile", "UserInfo")</p>
-    </div>
-    <div>
-        <h4>Password</h4>
-        <p>
+        <h4>
+            
+            @*<p>@Html.ActionLink("Update Profile", "UserInfo")</p>*@
+            <a class="btn btn-info" href="@Url.Action("UserInfo")">Update Profile</a>
+ 
+            
+
             @if (Model.HasPassword)
             {
-                @Html.ActionLink("Change your password", "ChangePassword")
+                @*@Html.ActionLink("Change your password", "ChangePassword")*@
+                <a class="btn btn-danger" href="@Url.Action("ChangePassword")">Change password</a>
             }
             else
             {
-                @Html.ActionLink("Create", "SetPassword")
+                @*@Html.ActionLink("Create", "SetPassword")*@
+                <a class="btn btn-success" href="@Url.Action("SetPassword")">Create password</a>
             }
-        </p>
+        </h4>
     </div>
     @*
         <dl class="dl-horizontal">

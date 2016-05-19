@@ -121,7 +121,7 @@ namespace FoodPicker.Controllers
                 }
             }
 
-            return View(userToUpdate);
+            return View("UserInfo", userToUpdate);
         }
 
         //
