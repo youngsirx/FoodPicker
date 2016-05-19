@@ -176,8 +176,6 @@ namespace FoodPicker.Controllers
                     db.Categories.Add(category);
                     await db.SaveChangesAsync();
 
-                    var categoryid = category.CategoryID;
-
                     food.Categories.Add(category);
 
                     
@@ -405,7 +403,7 @@ namespace FoodPicker.Controllers
 
 
                 }
-               
+                PopulateAssignedCategories(foodToUpdate);
                 return RedirectToAction("Details", new { id = id });
             }
 
