@@ -474,11 +474,23 @@ namespace FoodPicker.Controllers
 
         public ActionResult FoodsByCategory(string name)
         {
-            //Category category = db.Categories.Where(i => i.CategoryName == name).Single();
-            // var foods = db.Foods.Where(i => i.FoodID == category.CategoryID);
+            Category category = db.Categories.Where(i => i.CategoryName == name).SingleOrDefault();
+            //var foods = db.Foods.Where(i => i.FoodID == category.CategoryID);
 
-            var categories = db.Categories.Include(f => f.Foods).Where(f => f.CategoryName == name).SingleOrDefault();
-            var foods = categories.Foods;
+            //jkhalack: eager loading of restaurant information
+            db.Entry(category).Collection(x => x.Foods).Load();
+            foreach (Food food in category.Foods)
+            {
+                db.Entry(food).Reference(x => x.Restaurant).Load();
+            }
+            var foods = category.Foods;
+
+
+
+            //var categories = db.Categories.Include(f => f.Foods).Where(f => f.CategoryName == name).SingleOrDefault();
+            //var foods = categories.Foods;
+
+
             ViewBag.name = name;
 
             return View(foods.ToList());
