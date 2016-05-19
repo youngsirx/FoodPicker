@@ -168,10 +168,12 @@ namespace FoodPicker.Controllers
                  
                 }
             }
+            Category category = new Category();
+                    
                 //try { 
                 if (!string.IsNullOrEmpty(categoryname))
                 {
-                    Category category = new Category();
+                    //Category category = new Category();
                     category.CategoryName = categoryname;
                     db.Categories.Add(category);
                     await db.SaveChangesAsync();
