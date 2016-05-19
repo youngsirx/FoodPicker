@@ -136,7 +136,7 @@
 
 <div>
     <p>
-        @if ((User.IsInRole("owner")&& ViewBag.OwnerID == Model.Restaurant.UserID) || User.IsInRole("admin") )
+        @if ((User.IsInRole("owner")&& ViewBag.isOwner) || User.IsInRole("admin") )
             {
             <a class="btn btn-success" href="@Url.Action("Edit", new { id = Model.FoodID })">Edit</a>
         }

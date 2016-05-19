@@ -21,6 +21,7 @@ namespace FoodPicker.Controllers
         private FoodContext db = new FoodContext();
 
         // GET: Food
+        [AllowAnonymous]
         public ActionResult Index()
         {
             var foods = db.Foods.Include(f => f.Restaurant);
@@ -28,6 +29,7 @@ namespace FoodPicker.Controllers
         }
 
         // GET: Food/Details/5
+        [AllowAnonymous]
         public ActionResult Details(int? id)
         {
             //var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext.Create()));
@@ -60,11 +62,17 @@ namespace FoodPicker.Controllers
             {
                 return HttpNotFound();
             }
+
+            if (User.IsInRole("owner")) {
+                ViewBag.isOwner = (food.Restaurant.UserID == currentUserID());
+            }
+            
             return View(food);
         }
 
         // GET: Food/Details/5
         [HttpPost, ActionName("Details")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult AddDetails(int? id)
         {
@@ -130,6 +138,7 @@ namespace FoodPicker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "admin, owner")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Name,Description,RestaurantID,Price")] Food food, HttpPostedFileBase ImageName, string[] selectedCategory,string categoryname)
         {
@@ -287,6 +296,7 @@ namespace FoodPicker.Controllers
 
         // GET: Food/Edit/5
         //jyoung added check box
+        [Authorize(Roles = "admin, owner")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -304,7 +314,13 @@ namespace FoodPicker.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
+            if (User.IsInRole("owner"))
+            {
+                ViewBag.isOwner = (food.Restaurant.UserID == currentUserID());
+            }else
+            {
+                ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);            
+            }
             return View(food);
         }
 
@@ -312,6 +328,7 @@ namespace FoodPicker.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
+        [Authorize(Roles = "admin, owner")]
         [ValidateAntiForgeryToken]
         public ActionResult EditPost(int? id,  string[] selectedCategory, HttpPostedFileBase ImageName, string categoryname)
         {
@@ -319,6 +336,10 @@ namespace FoodPicker.Controllers
             var foodToUpdate = db.Foods
                .Include(i => i.Categories)
                .Where(i => i.FoodID == id).Single();
+            if (User.IsInRole("owner") && (foodToUpdate.Restaurant.UserID != currentUserID()))
+            {
+               return RedirectToAction("Details", new { id = id });
+            }
 
             if (ModelState.IsValid)
             {
@@ -444,6 +465,7 @@ namespace FoodPicker.Controllers
 
 
         // GET: Food/Delete/5
+        [Authorize(Roles = "admin, owner")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -455,23 +477,31 @@ namespace FoodPicker.Controllers
             {
                 return HttpNotFound();
             }
+            if (User.IsInRole("owner") && (food.Restaurant.UserID != currentUserID()))
+            {
+                return RedirectToAction("Details", new { id = id });
+            }
             return View(food);
         }
 
         // POST: Food/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "admin, owner")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             Food food = db.Foods.Find(id);
+            if (User.IsInRole("owner") && (food.Restaurant.UserID != currentUserID()))
+            {
+                return RedirectToAction("Details", new { id = id });
+            }
 
-            
             db.Foods.Remove(food);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-      
+      [Authorize]
         public ActionResult Favorite(int? id)
         {
             var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext.Create()));
@@ -490,6 +520,7 @@ namespace FoodPicker.Controllers
         }
 
         [HttpPost, ActionName("Favorite")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult RemoveFavorite(int? FoodID)
         {
@@ -515,7 +546,7 @@ namespace FoodPicker.Controllers
 
 
 
-
+        [AllowAnonymous]
         public ActionResult FoodsByCategory(string name)
         {
             Category category = db.Categories.Where(i => i.CategoryName == name).SingleOrDefault();
@@ -541,6 +572,7 @@ namespace FoodPicker.Controllers
         }
 
         //[HttpPost]
+        [AllowAnonymous]
         public ActionResult SearchResults(string searchstring)
         {
             //first find the categories that contain that string
