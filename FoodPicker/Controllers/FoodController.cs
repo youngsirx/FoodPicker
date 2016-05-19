@@ -61,15 +61,14 @@ namespace FoodPicker.Controllers
             var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext.Create()));
             var currentUser = manager.FindById(User.Identity.GetUserId());
             User userToUpdate = db.Users.Include(i => i.Foods).Where(i => i.Email == currentUser.Email).SingleOrDefault();
-            Food foodToDelete = db.Foods.Where(i => i.FoodID == id).SingleOrDefault();
-            if (foodToDelete != null)
+            Food foodToUpdate = db.Foods.Where(i => i.FoodID == id).SingleOrDefault();
+            if (foodToUpdate != null)
             {
-                userToUpdate.Foods.Add(foodToDelete);
+          
+                userToUpdate.Foods.Add(foodToUpdate);
             }
-            else
-            {
-                userToUpdate.Foods.Remove(foodToDelete);
-            }
+          
+            
 
             db.SaveChanges();
 
