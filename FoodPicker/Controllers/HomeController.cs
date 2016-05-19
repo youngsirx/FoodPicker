@@ -34,7 +34,7 @@ namespace FoodPicker.Controllers
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "FoodPicker Description page.";
 
             return View();
         }
@@ -45,5 +45,29 @@ namespace FoodPicker.Controllers
 
             return View();
         }
+        //jkhalack: Ajax search methods
+        private List<Models.Category> GetCategory(string searchString)
+        {
+            return db.Categories
+                .Where(i => i.CategoryName.Contains(searchString)).ToList();
+        }
+
+        public ActionResult CategorySearch(string q)
+        {
+            //get search results
+            var category = GetCategory(q);
+            return PartialView("_CategorySearch", category);
+        }
+
+        //this is the AJAX - autocomplete
+        public ActionResult QuickSearch(string term)
+        {
+            var category = GetCategory(term)
+                .Select(a => new { value = a.CategoryName });
+            return Json(category, JsonRequestBehavior.AllowGet);
+        }
+
+
+        //jkhalack: end Ajax search methods
     }
 }
