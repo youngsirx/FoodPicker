@@ -35,10 +35,16 @@ namespace FoodPicker.Controllers
             }
             //Restaurant restaurant = db.Restaurants.Find(id);
             var restaurant = db.Restaurants.Include(r => r.Foods).Where(r => r.RestaurantID == id).SingleOrDefault();
+           
+
             if (restaurant == null)
             {
                 return HttpNotFound();
             }
+
+            if (User.IsInRole("owner") && restaurant.UserID == currentUserID())
+            { ViewBag.isOwner = true; }
+            else { ViewBag.isOwner = false; }
             return View(restaurant);
         }
 
@@ -134,7 +140,16 @@ namespace FoodPicker.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.UserID = new SelectList(db.Users, "UserID", "FirstName", restaurant.UserID);
+            if (User.IsInRole("owner") ) 
+            {
+                if (restaurant.UserID != currentUserID()) { return View("NotYourRestaurant"); }
+            }
+            else {
+                ViewBag.UserID = new SelectList(db.Users, "UserID", "FirstName", restaurant.UserID);
+            }
+
+
+           
             return View(restaurant);
         }
 
@@ -244,7 +259,7 @@ namespace FoodPicker.Controllers
         //    ViewBag.UserID = new SelectList(db.Users, "UserID", "FirstName", restaurant.UserID);
         //    return View(restaurant);
         //}
-
+        [Authorize(Roles = "admin")]
         // GET: Restaurant/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -262,6 +277,7 @@ namespace FoodPicker.Controllers
 
         // POST: Restaurant/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "admin")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
@@ -291,6 +307,7 @@ namespace FoodPicker.Controllers
 
                 if(restaurant!=null)
                 {
+                    ViewBag.IsOwner = true;
                     return View("Details",restaurant);
                 }else
                 {
