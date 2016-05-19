@@ -95,14 +95,14 @@ namespace FoodPicker.Controllers
 
             if (foodToUpdate != null)
             {
-                if (removals != null)
-                {
+                //if (removals != null)
+                //{
                     
-                }
-                else
-                {
+                //}
+                //else
+                //{
                     userToUpdate.Foods.Add(foodToUpdate);                    
-                }
+                //}
                 
             }
      
