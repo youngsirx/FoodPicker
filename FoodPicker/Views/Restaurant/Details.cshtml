@@ -6,7 +6,7 @@
 
 <h2>@Html.DisplayFor(model => model.Name)</h2>
 <hr />
-@if (User.IsInRole("admin")|| User.IsInRole("owner")) { 
+@if (User.IsInRole("admin")|| (User.IsInRole("owner")&& ViewBag.IsOwner == true) ) { 
 <p>
     <a class="btn btn-info" href="@Url.Action("Create","Food")">Add New Food</a>
     @*@Html.ActionLink("Add New Food", "Create", "Food")*@

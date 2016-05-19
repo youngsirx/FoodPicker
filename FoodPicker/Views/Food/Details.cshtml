@@ -136,16 +136,16 @@
 @*@{
         var action = (User.IsInRole("admin") ? "Index" : "Listing");
     }*@
-<p>
+@*<p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.FoodID }) |
     @Html.ActionLink("Back to List", "Index")
-</p>
+</p>*@
 
 <div>
     <p>
-        @if ((User.IsInRole("owner")&& ViewBag.OwnerID == Model.Restaurant.UserID) || User.IsInRole("admin") )
+        @if ((User.IsInRole("owner")&& ViewBag.isOwner) || User.IsInRole("admin") )
             {
-            <a class="btn btn-success" href="@Url.Action("Edit", new { id = Model.FoodID }))">Edit</a>
+            <a class="btn btn-success" href="@Url.Action("Edit", new { id = Model.FoodID })">Edit</a>
         }
             <a class="btn btn-info" href="@Url.Action("Details","Restaurant",new { id = Model.RestaurantID })">Go to Restaurant</a>
             <a class="btn btn-info" href="@Url.Action("Index")">Go to Food List</a>
