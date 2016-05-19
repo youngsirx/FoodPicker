@@ -60,25 +60,30 @@ namespace FoodPicker.Controllers
         {
             var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ApplicationDbContext.Create()));
             var currentUser = manager.FindById(User.Identity.GetUserId());
-            var viewModel = new FavoriteData();
-            viewModel.Users = db.Users.Include(i => i.Foods).Where(i => i.Email == currentUser.Email);
-
-            var user = viewModel.Users.Where(i => i.Email == currentUser.Email).Single();
-
-            viewModel.Foods = viewModel.Users.Where(i => i.UserID == user.UserID).Single().Foods;
-
+            User userToUpdate = db.Users.Include(i => i.Foods).Where(i => i.Email == currentUser.Email).SingleOrDefault();
+            Food foodToUpdate = db.Foods.Where(i => i.FoodID == id).SingleOrDefault();
+            if (foodToUpdate != null)
+            {
+          
+                userToUpdate.Foods.Add(foodToUpdate);
+            }
+          
             
 
+            db.SaveChanges();
+
+
+            return RedirectToAction("Details");
             //var foodItem= db.Foods.Find(id);
 
             //var food = db.Foods.Where(i => i.FoodID == FoodID).SingleOrDefault();
 
             //if(food != null)
             //{
-               
+
             //var add = foodItem.Users.FirstOrDefault();
 
-           //foodItem.Users.Add(add);
+            //foodItem.Users.Add(add);
 
             //}
             //else
@@ -90,9 +95,8 @@ namespace FoodPicker.Controllers
             //    fav.Users.Remove(removals);
             //}
 
-            db.SaveChanges();
+           
 
-            return RedirectToAction("Details");
         }
 
 
@@ -118,6 +122,10 @@ namespace FoodPicker.Controllers
                     if (restaurant == null) { return View("NoRestaurant"); }
                     ViewBag.RestoID = restaurant.RestaurantID;
                 }
+
+
+                ViewBag.Category = new SelectList(db.Categories, "CategoryName", "CategoryID");
+
             }
             else
             {
@@ -469,6 +477,7 @@ namespace FoodPicker.Controllers
 
             return RedirectToAction("Favorite");
         }
+
 
 
 
