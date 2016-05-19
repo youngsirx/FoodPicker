@@ -59,8 +59,8 @@
 
                 @*@Html.LabelFor(model => model.Categories, "Categoires", htmlAttributes: new { @class = "control-label col-md-2" })
 
-                @Html.DropDownList("Categoires", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Categories, "", new { @class = "text-danger" })*@
+                    @Html.DropDownList("Categoires", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Categories, "", new { @class = "text-danger" })*@
                 <ul>
                     @{
                         var foodcategory = Model.Categories;
@@ -119,17 +119,32 @@
     <div class="col-md-12">
         <h3>Description</h3>
         <p>
-            
-                @Html.DisplayFor(model => model.Description)
-           </p>
-        
+
+            @Html.DisplayFor(model => model.Description)
+        </p>
+
     </div>
 </div>
 
 @*@{
-    var action = (User.IsInRole("admin") ? "Index" : "Listing");
-}*@
+        var action = (User.IsInRole("admin") ? "Index" : "Listing");
+    }*@
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.FoodID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+<div>
+    <p>
+        @if ((User.IsInRole("owner")&& ViewBag.OwnerID == Model.Restaurant.UserID) || User.IsInRole("admin") )
+            {
+            <a class="btn btn-success" href="@Url.Action("Edit", new { id = Model.FoodID }))">Edit</a>
+        }
+            <a class="btn btn-info" href="@Url.Action("Details","Restaurant",new { id = Model.RestaurantID })">Go to Restaurant</a>
+            <a class="btn btn-info" href="@Url.Action("Index")">Go to Food List</a>
+            
+        
+
+    </p>
+
+</div>
