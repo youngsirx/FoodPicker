@@ -23,12 +23,12 @@ namespace FoodPicker
 
 
             //jkhalack: add gmail
-
+            var credentialUserName = "youremail@gmail.com";
+            var sentFrom = "\"yoursite.com\"<portfolio.youremail@gmail.com>";
+            var pwd = "passwrod";
 
             //credentials
-            var credentialUserName = "portfolio.iamjordanyoung@gmail.com";
-            var sentFrom = "\"foodpicker.iamjordanyoung.com\"<portfolio.iamjordanyoung@gmail.com>";
-            var pwd = "kidm@n12";
+
 
 
 
