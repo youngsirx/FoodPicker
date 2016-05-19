@@ -36,10 +36,10 @@
                         if (status == google.maps.GeocoderStatus.OK) {
                             var marker = new google.maps.Marker({ map: map, position: results[0].geometry.location });
                             var infowindow = new google.maps.InfoWindow();
-                            infowindow.setContent('<a href="@Url.Action("Details", "Food", new { id = item.FoodID })"><h5>@item.Name</h5> <img src="~/FoodImages/@pictureName" width="100"/> </a>');
+                            infowindow.setContent('<a href="@Url.Action("Details", "Food", new { id = item.FoodID })"><h5>@item.Name</h5> <img src="~/FoodImages/@item.ImageName" width="100"/> </a>');
                             infowindow.open(map, marker);
                             google.maps.event.addListener(marker, 'click', function () {
-                                //infowindow.setContent('<a href="@Url.Action("Details", "Food", new { id = item.FoodID })"><h5>@item.Name</h5> <img src="~/FoodImages/@pictureName" width="100"/> </a>');
+                                //infowindow.setContent('<a href="@Url.Action("Details", "Food", new { id = item.FoodID })"><h5>@item.Name</h5> <img src="~/FoodImages/@item.ImageName" width="100"/> </a>');
                                 infowindow.open(map, marker);
                             });
                         }
