@@ -41,11 +41,21 @@ namespace FoodPicker.Controllers
 
             
 
+           
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Food food = db.Foods.Find(id);
+            Food food = db.Foods
+               .Include(i => i.Categories)
+               .Where(i => i.FoodID == id).Single();
+
+
+            var categories = db.Categories.Include(i => i.Foods).Where(i => i.CategoryID == food.FoodID).ToList();
+
+            ViewBag.categoryName = categories;
+
             if (food == null)
             {
                 return HttpNotFound();
@@ -143,7 +153,7 @@ namespace FoodPicker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "FoodID,Name,Description,RestaurantID,Price")] Food food, HttpPostedFileBase ImageName, string[] selectedCategory, string categoryname)
+        public async Task<ActionResult> Create([Bind(Include = "Name,Description,RestaurantID,Price")] Food food, HttpPostedFileBase ImageName, string[] selectedCategory,string categoryname)
         {
 
             if (selectedCategory != null)
@@ -157,17 +167,20 @@ namespace FoodPicker.Controllers
                     food.Categories.Add(categoryToAdd);
                  
                 }
-
-                if (categoryname != null)
+                //try { 
+                if (!string.IsNullOrEmpty(categoryname))
                 {
                     Category category = new Category();
                     category.CategoryName = categoryname;
                     db.Categories.Add(category);
                     await db.SaveChangesAsync();
                     food.Categories.Add(category);
-
-
                 }
+                //}
+                //catch (Exception)
+                //{
+                //    ModelState.AddModelError("", "Unable to save changes. Try again later!");
+                //}
             }
 
             //jyoung: added image upload

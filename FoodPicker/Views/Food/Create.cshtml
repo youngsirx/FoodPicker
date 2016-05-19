@@ -60,7 +60,7 @@
             }
             else 
             {
-                <input id="RestaurantID" name="RestaurantID" type="hidden" value="@ViewBag.RestaurantID" />
+                <input id="RestaurantID" name="RestaurantID" type="hidden" value="@ViewBag.RestoID" />
             }
 
             <div class="form-group">
@@ -134,17 +134,16 @@
                       } @*jkhalack: end of checking whether the viewbag was empty*@
                     }
 
-                   
-
                 </table>
 
             </div>
 
             <div class="form-group">
                 <div class="caption"><h3>Or Add Your Own</h3></div>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Categories, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Categories, "", new { @class = "text-danger" })
+                <div class="col-md-10">     
+                    @Html.Label("", htmlAttributes: new { @class = "control-label col-md-2" })               
+                   <input id="categoryname" name="categoryname" type="text" class="form-control text-box single-line"/>
+                   
                 </div>
             </div>
 

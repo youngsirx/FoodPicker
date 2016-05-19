@@ -46,8 +46,7 @@
         <td>
             @Html.DisplayFor(modelItem => item.Price)
         </td>
-        
-      
+         
         <td>
             @using (Html.BeginForm())
             {
@@ -55,7 +54,7 @@
 
                 <div class="form-actions no-color">
                     <input type="hidden" value="@item.FoodID" name="FoodID" />
-                      <input type="submit" value="Remove" class="btn btn-danger"  /> | @Html.ActionLink("Go To Details", "Details", new { id = item.FoodID})
+                    <input type="submit" value="Remove" class="btn btn-danger"  /> | @Html.ActionLink("Go To Details", "Details", new { id = item.FoodID})
                 </div>
             }
         </td>
