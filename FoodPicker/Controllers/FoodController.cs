@@ -102,7 +102,7 @@ namespace FoodPicker.Controllers
 
         //jyoung added check box
         // GET: Food/Create
-
+        [Authorize(Roles ="admin, owner")]
         public ActionResult Create()
         {
             if (User.IsInRole("owner"))
@@ -122,18 +122,14 @@ namespace FoodPicker.Controllers
                     if (restaurant == null) { return View("NoRestaurant"); }
                     ViewBag.RestoID = restaurant.RestaurantID;
                 }
-
-
-                ViewBag.Category = new SelectList(db.Categories, "CategoryName", "CategoryID");
-
+                
             }
             else
             {
                 ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name");
             }
 
-               
-
+          
             var food = new Food();
             food.Categories = new List<Category>();
             PopulateAssignedCategories(food);
@@ -147,16 +143,30 @@ namespace FoodPicker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "FoodID,Name,Description,RestaurantID,Price")] Food food, HttpPostedFileBase ImageName, string[] selectedCategory)
+        public async Task<ActionResult> Create([Bind(Include = "FoodID,Name,Description,RestaurantID,Price")] Food food, HttpPostedFileBase ImageName, string[] selectedCategory, string categoryname)
         {
 
             if (selectedCategory != null)
             {
                 food.Categories = new List<Category>();
+
+
                 foreach (var cat in selectedCategory)
                 {
                     var categoryToAdd = db.Categories.Find(int.Parse(cat));
                     food.Categories.Add(categoryToAdd);
+                 
+                }
+
+                if (categoryname != null)
+                {
+                    Category category = new Category();
+                    category.CategoryName = categoryname;
+                    db.Categories.Add(category);
+                    await db.SaveChangesAsync();
+                    food.Categories.Add(category);
+
+
                 }
             }
 
@@ -211,6 +221,9 @@ namespace FoodPicker.Controllers
                     db.Entry(food).State = EntityState.Modified;
                     await db.SaveChangesAsync();
 
+
+                  
+
                     return RedirectToAction("Details", new { id = food.FoodID });
                 }
                 else
@@ -229,11 +242,14 @@ namespace FoodPicker.Controllers
                 }
 
             }//end of modelstate
+
+
             if (User.IsInRole("owner")) { ViewBag.RestoID = food.RestaurantID; }
             else
             {
                 ViewBag.RestaurantID = new SelectList(db.Restaurants, "RestaurantID", "Name", food.RestaurantID);
             }
+
             PopulateAssignedCategories(food);
 
             return View(food);
@@ -298,7 +314,7 @@ namespace FoodPicker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult EditPost(int? id,  string[] selectedCategory, HttpPostedFileBase ImageName)
+        public ActionResult EditPost(int? id,  string[] selectedCategory, HttpPostedFileBase ImageName, string categoryname)
         {
             
             var foodToUpdate = db.Foods
@@ -314,7 +330,18 @@ namespace FoodPicker.Controllers
                     {
                         UpdateFoodCategory(selectedCategory, foodToUpdate);
                         db.SaveChanges();
-                        
+
+                        if (categoryname != null)
+                        {
+                            Category category = new Category();
+                            category.CategoryName = categoryname;
+                            db.Categories.Add(category);
+                            db.SaveChanges();
+                            foodToUpdate.Categories.Add(category);
+                            db.SaveChanges();
+                        }
+
+
                     }
                     catch (Exception)
                     {
