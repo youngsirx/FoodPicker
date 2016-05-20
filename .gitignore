@@ -243,3 +243,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/FoodPicker/Properties/PublishProfiles/foodpicker.monctonukrainian.com - Web Deploy.pubxml

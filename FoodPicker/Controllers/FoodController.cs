@@ -66,11 +66,17 @@ namespace FoodPicker.Controllers
             if (User.IsInRole("owner")) {
                 ViewBag.isOwner = (food.Restaurant.UserID == currentUserID());
             }
+            if(User.IsInRole("user")){
+                int userID = (int) currentUserID();
+                User user = db.Users.Include(i => i.Foods).Where(i => i.UserID == userID ).SingleOrDefault();
+                ViewBag.isFavorite = user.Foods.Contains(food); 
+            }
             
+
             return View(food);
         }
 
-        // GET: Food/Details/5
+        // Post: Food/Details/5
         [HttpPost, ActionName("Details")]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -81,35 +87,38 @@ namespace FoodPicker.Controllers
             User userToUpdate = db.Users.Include(i => i.Foods).Where(i => i.Email == currentUser.Email).SingleOrDefault();
             Food foodToUpdate = db.Foods.Where(i => i.FoodID == id).SingleOrDefault();
 
+            //jhkalack: change of logic
+            if (userToUpdate.Foods.Contains(foodToUpdate))
+            { userToUpdate.Foods.Remove(foodToUpdate); }
+            else { userToUpdate.Foods.Add(foodToUpdate); }
 
+            //var user = db.Users.Where(i => i.Email == currentUser.Email).Single();
+            ////var fav = db.Foods.Find(id);
+            ////var removals = fav.Users.Single();
 
-            var user = db.Users.Where(i => i.Email == currentUser.Email).Single();
             //var fav = db.Foods.Find(id);
-            //var removals = fav.Users.Single();
 
-            var fav = db.Foods.Find(id);
-
-            var removals = fav.Users.Where(i => i.UserID == user.UserID).SingleOrDefault();
+            //var removals = fav.Users.Where(i => i.UserID == user.UserID).SingleOrDefault();
             
 
 
-            if (foodToUpdate != null)
-            {
-                //if (removals != null)
-                //{
+            //if (foodToUpdate != null)
+            //{
+            //    //if (removals != null)
+            //    //{
                     
-                //}
-                //else
-                //{
-                    userToUpdate.Foods.Add(foodToUpdate);                    
-                //}
+            //    //}
+            //    //else
+            //    //{
+            //        userToUpdate.Foods.Add(foodToUpdate);                    
+            //    //}
                 
-            }
+            //}
      
             db.SaveChanges();
 
 
-            return RedirectToAction("Details");
+            return RedirectToAction("Details", new { id = id});
                   
 
         }

@@ -100,21 +100,37 @@
                 {
                     @Html.AntiForgeryToken()
 
-
-                 
+                    if (ViewBag.isFavorite)
+                    {
+                        <div class="form-group">
+                            <div class="col-md-offset-4">
+                                <input type="hidden" value="@Model.FoodID" name="FoodID" />
+                                <input type="submit" value="UnFavorite" class="btn btn-danger" />
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
                         <div class="form-group">
                             <div class="col-md-offset-4">
                                 <input type="hidden" value="@Model.FoodID" name="FoodID" />
                                 <input type="submit" value="Favorite" class="btn btn-success" />
                             </div>
                         </div>
-                    
+                    }
+
+
+
 
 
 
                 }
             }
         </dl>
+
+
+
+
 
 
 
